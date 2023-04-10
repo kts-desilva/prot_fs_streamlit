@@ -269,7 +269,8 @@ elif condition == 'Feature Selection':
     scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
     model3.fit(X_train, y_train)
     #rf_disp = RocCurveDisplay.from_estimator(model3, X_test, y_test)
-    height, width, margin = 450, 1500, 10
+    #height, width, margin = 450, 1500, 10
+    height, width, = 6.4, 4.8
     fig = plt.figure(figsize=(height, width))
     RocCurveDisplay.from_estimator(model3, X_test, y_test)
     st.pyplot(fig)
