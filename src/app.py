@@ -22,9 +22,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, StratifiedKFold, cross_val_predict,  KFold
-from sklearn.metrics import plot_roc_curve
 from xgboost.sklearn import XGBClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix,plot_roc_curve
 
 from sklearn.metrics import roc_curve, auc
 from sklearn.ensemble import RandomForestClassifier
