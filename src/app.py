@@ -21,13 +21,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-"""
-# Predicting Rental Prices in Brazil
-[![Star](https://img.shields.io/github/stars/arturlunardi/predict_rental_prices_streamlit?style=social)](https://github.com/arturlunardi/predict_rental_prices_streamlit)
-&nbsp[![Follow](https://img.shields.io/badge/medium-arturlunardi-follow?style=social&logo=medium)](https://arturlunardi.medium.com/)
-&nbsp[![Follow](https://img.shields.io/badge/Connect-follow?style=social&logo=linkedin)](https://www.linkedin.com/in/artur-lunardi-di-fante-393611194/)
-"""
-
 # ----------- Data -------------------
 
 
