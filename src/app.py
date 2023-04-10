@@ -175,30 +175,24 @@ elif condition == 'EDA':
 
     height, width, margin = 450, 1500, 10
 
-    st.subheader('Rent Amount Distribution')
+    st.subheader('Diasese Proteomics Distribution')
 
     select_city_eda = st.selectbox(
-        'Select the City',
-        ['All'] + [i for i in data['city'].unique()]
+        'Select the Disease Type',
+        ['All'] + [i for i in data['Sample_Tumor_Normal'].unique()]
+    )
+    
+    select_protein_eda = st.selectbox(
+        'Select Protein',
+        ['All'] + [i for i in data.columns]
     )
 
     if select_city_eda == 'All':
-        fig = graphs.plot_histogram(data=data, x="rent amount (R$)", nbins=50, height=height, width=width, margin=margin)
+        fig = graphs.plot_histogram(data=data, x=select_protein_eda, nbins=50, height=height, width=width, margin=margin)
     else:
         fig = graphs.plot_histogram(
-            data = data.loc[data['city'] == select_city_eda], x="rent amount (R$)", nbins=50, height=height, width=width, margin=margin)
+            data = data.loc[data['Sample_Tumor_Normal'] == select_city_eda], x=select_protein_eda, nbins=50, height=height, width=width, margin=margin)
                       
-    st.plotly_chart(fig)
-
-    st.subheader('Scatterplot')
-
-    select_numerical = st.selectbox(
-        'Select the Numerical Variable',
-        ['area', 'hoa (R$)', 'property tax (R$)', 'fire insurance (R$)']
-    )
-
-    fig = graphs.plot_scatter(data=data, x=select_numerical, y="rent amount (R$)", height=height, width=width, margin=margin)
-
     st.plotly_chart(fig)
 
     st.subheader('Categorical Graphs')
