@@ -272,7 +272,7 @@ elif condition == 'Feature Selection':
     height, width, margin = 450, 1500, 10
     fig = plt.figure(figsize=(height, width))
     RocCurveDisplay.from_estimator(model3, X_test, y_test)
-    st.pyplot()
+    st.pyplot(fig)
     #st.plotly_chart(rf_disp)
 
 # -------------------------------------------
