@@ -23,7 +23,7 @@ import seaborn as sns
 
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, StratifiedKFold, cross_val_predict,  KFold
 from xgboost.sklearn import XGBClassifier
-from sklearn.metrics import classification_report, confusion_matrix,plot_roc_curve
+from sklearn.metrics import classification_report, confusion_matrix,RocCurveDisplay
 
 from sklearn.metrics import roc_curve, auc
 from sklearn.ensemble import RandomForestClassifier
@@ -268,7 +268,7 @@ elif condition == 'Feature Selection':
     model3.fit(X_train, y_train)
     #rf_disp = RocCurveDisplay.from_estimator(model3, X_test, y_test)
     
-    plot_roc_curve(model3, X_test, y_test)
+    RocCurveDisplay.from_estimator(model3, X_test, y_test)
     st.pyplot()
     #st.plotly_chart(rf_disp)
 
