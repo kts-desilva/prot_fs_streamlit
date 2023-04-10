@@ -182,9 +182,13 @@ elif condition == 'EDA':
         ['All'] + [i for i in data['Sample_Tumor_Normal'].unique()]
     )
     
+    ncolms =   list(data.columns.values.tolist())
+    ncolms.remove('Sample_Tumor_Normal')
+    ncolms.remove('Patient_ID')
+    
     select_protein_eda = st.selectbox(
         'Select Protein',
-        ['All'] + [i for i in data.columns]
+        ['All'] + [i for i in ncolms]
     )
 
     if select_city_eda == 'All':
@@ -195,33 +199,9 @@ elif condition == 'EDA':
                       
     st.plotly_chart(fig)
 
-    st.subheader('Categorical Graphs')
+    st.subheader('Histogram for Protein')
 
-    select_graph = st.radio(
-        'Select the Type of Graph',
-        ('Boxplot', 'Countplot')
-    )
-
-    select_variable = st.selectbox(
-        'Select the Variable',
-        [i for i in data.columns if data[i].dtype == object and i != 'floor']
-    )
-
-    if select_graph == 'Boxplot':
-        fig = graphs.plot_boxplot(data=data, x=select_variable, y="rent amount (R$)", color=select_variable, height=height, width=width, margin=margin)
-    elif select_graph == 'Countplot':
-        fig = graphs.plot_countplot(data=data, x=select_variable, height=height, width=width, margin=margin)
-
-    st.plotly_chart(fig)
-
-    st.subheader('Rent amount mean per Variable')
-
-    option = st.selectbox(
-        'Select the Column',
-        ('rooms', 'bathroom', 'parking spaces'),
-    )
-
-    fig = graphs.plot_bar(data=data.groupby(option).mean().reset_index(), x=option, y='rent amount (R$)', height=height, width=width, margin=margin)
+    fig = graphs.plot_boxplot(data=data, x="Sample_Tumor_Normal", y=select_protein_eda, color="Sample_Tumor_Normal", height=height, width=width, margin=margin)
 
     st.plotly_chart(fig)
 
