@@ -9,3 +9,5 @@ tensorflow
 keras
 statsmodels
 matplotlib
+seaborn
+yellowbrick
