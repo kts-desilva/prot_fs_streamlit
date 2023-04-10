@@ -179,7 +179,7 @@ elif condition == 'EDA':
 
     select_city_eda = st.selectbox(
         'Select the Disease Type',
-        ['All'] + [i for i in data['Sample_Tumor_Normal'].unique()]
+        [i for i in data['Sample_Tumor_Normal'].unique()]
     )
     
     ncolms =   list(data.columns.values.tolist())
@@ -188,7 +188,7 @@ elif condition == 'EDA':
     
     select_protein_eda = st.selectbox(
         'Select Protein',
-        ['All'] + [i for i in ncolms]
+        [i for i in ncolms]
     )
 
     if select_city_eda == 'All':
