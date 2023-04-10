@@ -105,11 +105,27 @@ raw_eval_df = get_raw_eval_df()
 #eval_df = load_models_df(raw_eval_df)
 x, y, x_train, x_test, y_train, y_test = split(clean_df)
 
+def preprocess_data(df):
+    df.shape
+    df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
+    df.fillna(0, inplace=True)
+    
+    unwanted_columns = ['Patient_ID','Sample_Tumor_Normal','Binary_Class' ]
+
+    # data splitting
+    X_combin = df.drop(unwanted_columns, axis=1)
+    y = df[['Binary_Class']]
+    print(y.shape)
+
+    X_combin = X_combin.loc[:,~X_combin.columns.duplicated()]
+    
+    return (X_combin,y) 
+
 # ----------- Global Sidebar ---------------
 
 condition = st.sidebar.selectbox(
     "Select the visualization",
-    ("Introduction", "EDA", "Model Prediction", "Model Evaluation")
+    ("Introduction", "EDA", "Feature Selection", "Model Prediction", "Model Evaluation")
 )
 
 # ------------- Introduction ------------------------
@@ -204,15 +220,19 @@ elif condition == 'EDA':
     fig = graphs.plot_boxplot(data=data, x="Sample_Tumor_Normal", y=select_protein_eda, color="Sample_Tumor_Normal", height=height, width=width, margin=margin)
 
     st.plotly_chart(fig)
+    
+# -------------------------------------------
 
-    st.subheader('Correlation Matrix')
+elif condition == 'Feature Selection':
+    X_combin,y = preprocess_data(raw_df)
+    X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
 
-    corr_matrix = data.corr()
-
-    fig = graphs.plot_heatmap(corr_matrix=corr_matrix, height=height, margin=margin)
-
-    st.plotly_chart(fig)
-
+    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+    model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
+    scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+    model3.fit(X_train, y_train)
+    rf_disp = RocCurveDisplay.from_estimator(model3, X_test, y_test)
+    st.plotly_chart(rf_disp)
 
 # -------------------------------------------
 
