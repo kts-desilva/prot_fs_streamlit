@@ -24,7 +24,7 @@ st.set_page_config(
 # ----------- Data -------------------
 
 
-@st.cache
+#@st.cache
 def get_raw_data():
     """
     This function return a pandas DataFrame with the raw data.
@@ -34,7 +34,7 @@ def get_raw_data():
     return raw_df
 
 
-@st.cache
+#@st.cache
 def get_cleaned_data():
     """
     This function return a pandas DataFrame with the cleaned data.
@@ -44,7 +44,7 @@ def get_cleaned_data():
     return clean_data
 
 
-@st.cache
+#@st.cache
 def get_raw_eval_df():
     """
     This function return a pandas DataFrame with the dataframe and the machine learning models along with it's metrics.
@@ -54,7 +54,7 @@ def get_raw_eval_df():
     return raw_eval_df
 
 
-@st.cache(hash_funcs={pd.DataFrame: lambda x: x})
+#@st.cache(hash_funcs={pd.DataFrame: lambda x: x})
 def load_models_df(dataframe):
     df_evaluated = dataframe.copy()
     models_list = os.listdir(os.path.join(os.path.abspath(''), 'models'))
@@ -86,7 +86,7 @@ def load_models_df(dataframe):
     return df_evaluated.sort_values(by='rmse_cv').reset_index(drop=True)
 
 
-@st.cache
+#@st.cache
 def split(dataframe):
     df = dataframe.copy()
     x = df.drop(columns=['rent amount (R$)'], axis=1)
