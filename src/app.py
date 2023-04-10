@@ -40,13 +40,14 @@ from sklearn.metrics import RocCurveDisplay
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_iris, make_classification
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import LinearSVC
 from sklearn.pipeline import make_pipeline
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.linear_model import SGDClassifier
 from sklearn import metrics
+from yellowbrick.model_selection import RFECV
 
 # %%
 st.set_page_config(
