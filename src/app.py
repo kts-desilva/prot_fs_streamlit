@@ -30,7 +30,7 @@ def get_raw_data():
     This function return a pandas DataFrame with the raw data.
     """
 
-    raw_df = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'houses_to_rent_v2.csv'))
+    raw_df = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'ovarian_clinical_data2.csv'))
     return raw_df
 
 
