@@ -8,4 +8,4 @@ plotly
 tensorflow
 keras
 statsmodels
-
+matplotlib
