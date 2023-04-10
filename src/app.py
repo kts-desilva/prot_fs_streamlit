@@ -21,7 +21,7 @@ from scipy import stats
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, StratifiedKFold, cross_val_predict,  KFold
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, StratifiedKFold, cross_val_predict,  KFold, plot_roc_curve
 from xgboost.sklearn import XGBClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
@@ -266,8 +266,11 @@ elif condition == 'Feature Selection':
     model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
     scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
     model3.fit(X_train, y_train)
-    rf_disp = RocCurveDisplay.from_estimator(model3, X_test, y_test)
-    st.plotly_chart(rf_disp)
+    #rf_disp = RocCurveDisplay.from_estimator(model3, X_test, y_test)
+    
+    plot_roc_curve(model3, X_test, y_test)
+    st.pyplot()
+    #st.plotly_chart(rf_disp)
 
 # -------------------------------------------
 
