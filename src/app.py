@@ -109,7 +109,7 @@ def split(dataframe):
 raw_df = get_raw_data()
 clean_df = get_cleaned_data()
 raw_eval_df = get_raw_eval_df()
-eval_df = load_models_df(raw_eval_df)
+#eval_df = load_models_df(raw_eval_df)
 x, y, x_train, x_test, y_train, y_test = split(clean_df)
 
 # ----------- Global Sidebar ---------------
