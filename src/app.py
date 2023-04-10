@@ -263,18 +263,27 @@ elif condition == 'EDA':
 elif condition == 'Feature Selection':
     X_combin,y = preprocess_data(raw_df)
     X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
-
+    
+    st.subheader('Intial Inspection with XGBoost Classifier')
+    
     cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
     model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
     scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
     model3.fit(X_train, y_train)
-    #rf_disp = RocCurveDisplay.from_estimator(model3, X_test, y_test)
-    #height, width, margin = 450, 1500, 10
-    height, width, = 12.8, 9.6
-    fig = plt.figure(figsize=(height, width))
+
     RocCurveDisplay.from_estimator(model3, X_test, y_test)
     st.pyplot()
-    #st.plotly_chart(rf_disp)
+    
+    st.subheader('Recursive Feature Elimination with SGDClassifier')
+    # SGDClassifier
+    visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
+    visualizer.fit(X_combin, y)        # Fit the data to the visualizer
+    visualizer.show()
+    new_df2 = X_combin.loc[:, visualizer.support_]
+    st.subheader('Recursive Feature Elimination with SGDClassifier',new_df2)
+    print("Features: ", X_combin.columns)
+    st.pyplot()
+    
 
 # -------------------------------------------
 
