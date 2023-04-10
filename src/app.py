@@ -13,6 +13,41 @@ from tensorflow.keras.models import load_model
 import functools
 from sklearn.model_selection import train_test_split
 import graphs
+
+#Basic libraries
+from scipy import stats
+
+#import missingno as msno
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, StratifiedKFold, cross_val_predict,  KFold
+from xgboost.sklearn import XGBClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+
+from sklearn.metrics import roc_curve, auc
+from sklearn.ensemble import RandomForestClassifier
+
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import f_classif
+from sklearn.svm import SVC
+from sklearn.model_selection import RepeatedStratifiedKFold
+from numpy import mean
+from sklearn.metrics import accuracy_score
+
+from sklearn.metrics import RocCurveDisplay
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.svm import LinearSVC
+from sklearn.pipeline import make_pipeline
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.linear_model import SGDClassifier
+from sklearn import metrics
+
 # %%
 st.set_page_config(
     page_title="Predicting Real Estate Prices in Brazil",
