@@ -20,6 +20,7 @@ from scipy import stats
 #import missingno as msno
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib_venn import venn3
 
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, StratifiedKFold, cross_val_predict,  KFold
 from xgboost.sklearn import XGBClassifier
@@ -312,8 +313,8 @@ elif condition == 'Feature Selection':
     visualizer.fit(new_df, y)        # Fit the data to the visualizer
     #visualizer.show()
     st_yellowbrick(visualizer)  
-    new_df2 = new_df.loc[:, visualizer.support_]
-    st.text("SGDClassifier Features: "+ new_df2.columns)
+    new_df2_sdg = new_df.loc[:, visualizer.support_]
+    st.text("SGDClassifier Features: "+ new_df2_sdg.columns)
     
     #rf-taking too much time
 #     st.subheader('Recursive Feature Elimination with Random Forest')
@@ -333,10 +334,10 @@ elif condition == 'Feature Selection':
     visualizer.fit(new_df, y)
     #visualizer.show()
     st_yellowbrick(visualizer) 
-    new_df2 = new_df.loc[:, visualizer.support_]
-    print("Features: ", new_df2.columns)
+    new_df2_svm = new_df.loc[:, visualizer.support_]
+    print("Features: ", new_df2_svm.columns)
     #find_if_correct_features_found(new_df2.columns)
-    st.text("Support Vector Machine Features: "+ new_df2.columns)
+    st.text("Support Vector Machine Features: "+ new_df2_svm.columns)
     
     #xgb
     xgb1 = XGBClassifier(
@@ -355,9 +356,16 @@ elif condition == 'Feature Selection':
     visualizer.fit(new_df, y)
     #visualizer.show() 
     st_yellowbrick(visualizer) 
-    new_df2 = new_df.loc[:, visualizer.support_]
+    new_df2_xgb = new_df.loc[:, visualizer.support_]
     print("Features: ", new_df2.columns)
-    st.text("XGBoost Features: "+ new_df2.columns)
+    st.text("XGBoost Features: "+ new_df2_xgb.columns)
+    
+    set1 = set(new_df2_sdg.columns)
+    set2 = set(new_df2_svm.columns)
+    set3 = set(new_df2_xgb.columns)
+
+    venn3([set1, set2, set3], ('SDG', 'SVM', 'XGB'))
+    st.pyplot()
     
 
 # -------------------------------------------
