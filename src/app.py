@@ -48,6 +48,7 @@ from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.linear_model import SGDClassifier
 from sklearn import metrics
 from yellowbrick.model_selection import RFECV
+from streamlit_yellowbrick import st_yellowbrick
 
 # %%
 st.set_page_config(
@@ -282,7 +283,8 @@ elif condition == 'Feature Selection':
     # SGDClassifier
     visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
     visualizer.fit(X_combin, y)        # Fit the data to the visualizer
-    visualizer.show()
+    #visualizer.show()
+    st_yellowbrick(visualizer)  
     new_df2 = X_combin.loc[:, visualizer.support_]
     st.subheader('Recursive Feature Elimination with SGDClassifier',new_df2)
     print("Features: ", X_combin.columns)
