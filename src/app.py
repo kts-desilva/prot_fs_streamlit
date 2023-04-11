@@ -154,7 +154,6 @@ def preprocess_data(df):
     # data splitting
     X_combin = df.drop(unwanted_columns, axis=1)
     y = df[['Binary_Class']]
-    print(y.shape)
 
     X_combin = X_combin.loc[:,~X_combin.columns.duplicated()]
     
@@ -316,17 +315,17 @@ elif condition == 'Feature Selection':
     new_df2 = new_df.loc[:, visualizer.support_]
     st.text("SGDClassifier Features: "+ new_df2.columns)
     
-    #rf
-    st.subheader('Recursive Feature Elimination with Random Forest')
-    cv_rf = StratifiedKFold(3)
-    visualizer_rf = RFECV(RandomForestClassifier(), cv=cv_rf, scoring='f1_weighted')
-    visualizer_rf.fit(new_df, y)
-    #visualizer_rf.show()
-    st_yellowbrick(visualizer_rf) 
-    new_df2 = new_df.loc[:, visualizer_rf.support_]
-    print("Features: ", new_df2.columns)
-    #find_if_correct_features_found(new_df2.columns)
-    st.text("Random Forest Features: "+ new_df2.columns)
+    #rf-taking too much time
+#     st.subheader('Recursive Feature Elimination with Random Forest')
+#     cv_rf = StratifiedKFold(3)
+#     visualizer_rf = RFECV(RandomForestClassifier(), cv=cv_rf, scoring='f1_weighted')
+#     visualizer_rf.fit(new_df, y)
+#     #visualizer_rf.show()
+#     st_yellowbrick(visualizer_rf) 
+#     new_df2 = new_df.loc[:, visualizer_rf.support_]
+#     print("Features: ", new_df2.columns)
+#     #find_if_correct_features_found(new_df2.columns)
+#     st.text("Random Forest Features: "+ new_df2.columns)
     
     #svm
     st.subheader('Recursive Feature Elimination with Support Vector Machine')
