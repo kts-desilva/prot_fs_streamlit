@@ -265,6 +265,7 @@ elif condition == 'EDA':
 elif condition == 'Feature Selection':
     X_combin,y = preprocess_data(raw_df)
     X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
+    height, width, margin = 450, 1500, 10
     
     st.subheader('Intial Inspection with XGBoost Classifier')
     
@@ -273,22 +274,26 @@ elif condition == 'Feature Selection':
     scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
     model3.fit(X_train, y_train)
     
-    fig, ax = plt.subplots(figsize=(3.5, 1.5))
-   
-    RocCurveDisplay.from_estimator(model3, X_test, y_test)
+#     fig, ax = plt.subplots(figsize=(3.5, 1.5))
+#     RocCurveDisplay.from_estimator(model3, X_test, y_test)
+#     st.pyplot(fig)
     
-    st.pyplot(fig)
+    y_pred_proba = model3.predict_proba(X_test)[::,1]
+    fpr, tpr, _ = metrics.roc_curve(y_test,  y_pred_proba)
+    fig = plot_roc(fpr, tpr,height, width, margin)
+    st.plotly_chart(fig)
     
-    st.subheader('Recursive Feature Elimination with SGDClassifier')
-    # SGDClassifier
-    visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
-    visualizer.fit(X_combin, y)        # Fit the data to the visualizer
-    #visualizer.show()
-    st_yellowbrick(visualizer)  
-    new_df2 = X_combin.loc[:, visualizer.support_]
-    st.subheader('Recursive Feature Elimination with SGDClassifier',new_df2)
-    print("Features: ", X_combin.columns)
-    st.pyplot()
+    
+#     st.subheader('Recursive Feature Elimination with SGDClassifier')
+#     # SGDClassifier
+#     visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
+#     visualizer.fit(X_combin, y)        # Fit the data to the visualizer
+#     #visualizer.show()
+#     st_yellowbrick(visualizer)  
+#     new_df2 = X_combin.loc[:, visualizer.support_]
+#     st.subheader('Recursive Feature Elimination with SGDClassifier',new_df2)
+#     print("Features: ", X_combin.columns)
+#     st.pyplot()
     
 
 # -------------------------------------------
