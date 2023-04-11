@@ -297,10 +297,53 @@ elif condition == 'Feature Selection':
     visualizer.fit(new_df, y)        # Fit the data to the visualizer
     #visualizer.show()
     st_yellowbrick(visualizer)  
-    new_df2 = X_combin.loc[:, visualizer.support_]
+    new_df2 = new_df.loc[:, visualizer.support_]
+    st.text("SGDClassifier Features: ", new_df2.columns)
     
-    st.subheader('Recursive Feature Elimination with SGDClassifier',new_df2)
-    st.text("Features: ", X_combin.columns)
+    #rf
+    st.subheader('Recursive Feature Elimination with Random Forest')
+    cv_rf = StratifiedKFold(3)
+    visualizer_rf = RFECV(RandomForestClassifier(), cv=cv_rf, scoring='f1_weighted')
+    visualizer_rf.fit(new_df, y)
+    #visualizer_rf.show()
+    st_yellowbrick(visualizer_rf) 
+    new_df2 = new_df.loc[:, visualizer_rf.support_]
+    print("Features: ", new_df2.columns)
+    #find_if_correct_features_found(new_df2.columns)
+    st.text("Random Forest Features: ", new_df2.columns)
+    
+    #svm
+    st.subheader('Recursive Feature Elimination with Support Vector Machine')
+    visualizer = RFECV(SVC(kernel='linear', C=1))
+    visualizer.fit(new_df, y)
+    #visualizer.show()
+    st_yellowbrick(visualizer) 
+    new_df2 = new_df.loc[:, visualizer.support_]
+    print("Features: ", new_df2.columns)
+    #find_if_correct_features_found(new_df2.columns)
+    st.text("Support Vector Machine Features: ", new_df2.columns)
+    
+    #xgb
+    xgb1 = XGBClassifier(
+        learning_rate =0.2,
+        n_estimators=1000,
+        max_depth=5,
+        min_child_weight=1,
+        gamma=0,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        objective= 'binary:logistic',
+        nthread=4,
+        scale_pos_weight=1,
+        seed=27)
+    visualizer = RFECV(xgb1)
+    visualizer.fit(new_df, y)
+    #visualizer.show() 
+    st_yellowbrick(visualizer) 
+    new_df2 = new_df.loc[:, visualizer.support_]
+    print("Features: ", new_df2.columns)
+    st.text("XGBoost Features: ", new_df2.columns)
+    
 
 # -------------------------------------------
 
