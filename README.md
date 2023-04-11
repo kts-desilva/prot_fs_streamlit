@@ -1,21 +1,33 @@
 # About
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/arturlunardi/predict_rental_prices_streamlit/main/src/app.py)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://kts-desilva-prot-fs-streamlit-srcapp-eh8dfx.streamlit.app/)
+
 
 This application provides an overview of the brazilian_houses_to_rent dataset from Kaggle. It is a dataset that provides rent prices for real estate properties in Brazil.
 
-The app it is [deployed](https://share.streamlit.io/arturlunardi/predict_rental_prices_streamlit/main/src/app.py) in Streamlit.
+The app it is [deployed](https://kts-desilva-prot-fs-streamlit-srcapp-eh8dfx.streamlit.app/) in Streamlit.
 
-The data were provided from this [source](https://www.kaggle.com/rubenssjr/brasilian-houses-to-rent). 
+The data were provided from this [source](https://cptac-data-portal.georgetown.edu/). 
 
 You can check on the sidebar of the app:
 - EDA (Exploratory Data Analysis)
+- Feature Selection
 - Model Prediction
 - Model Evaluation
 
-The prediction are made regarding to the rent amount utilizing pre trained machine learning models.
+The predictions are made with classification performed to distinguish tumor vs control utlizing pre-trained machine learning models.
 
-All the operations in the dataset were already done and stored as csv files inside the data directory. If you want to check the code, go through the notebook directory in this repository.
+The data is available in raw format and pre-processed format as csv files inside the data directory.If you want to check the code, go through the notebook directory in this repository.
+
+# Feature Selection
+
+Feature selection based on recursive and iterative feature selection methods based on scikit-learn packages.
+Machine learning algorithms used
+
+- XGBoost
+- Random Forest
+- Support Vector Machine
+- Stochastic Gradient Descent
 
 # Model Definition
 
@@ -25,13 +37,13 @@ The combinations are regarding to perform Feature Creation and/or Target Transfo
 
 Models:
 
+- XGBoost
 - Random Forest
-- XGB
-- Ridge
-- LGBM
-- Neural Network
-
+- Support Vector Machine
+- Stochastic Gradient Descent
+- 
 Our main accuracy metric is RMSE. To enhance our model definition, we utilized Cross Validation and Random Search for hyperparameter tuning.
+Further, we have considered using precision, recall and specificity metrics to access the quality of the developed methodlogy.
 
 # Run the App
 
