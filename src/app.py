@@ -298,7 +298,7 @@ elif condition == 'Feature Selection':
     #visualizer.show()
     st_yellowbrick(visualizer)  
     new_df2 = new_df.loc[:, visualizer.support_]
-    st.text("SGDClassifier Features: ", new_df2.columns)
+    st.text("SGDClassifier Features: "+ new_df2.columns)
     
     #rf
     st.subheader('Recursive Feature Elimination with Random Forest')
@@ -310,7 +310,7 @@ elif condition == 'Feature Selection':
     new_df2 = new_df.loc[:, visualizer_rf.support_]
     print("Features: ", new_df2.columns)
     #find_if_correct_features_found(new_df2.columns)
-    st.text("Random Forest Features: ", new_df2.columns)
+    st.text("Random Forest Features: "+ new_df2.columns)
     
     #svm
     st.subheader('Recursive Feature Elimination with Support Vector Machine')
@@ -321,7 +321,7 @@ elif condition == 'Feature Selection':
     new_df2 = new_df.loc[:, visualizer.support_]
     print("Features: ", new_df2.columns)
     #find_if_correct_features_found(new_df2.columns)
-    st.text("Support Vector Machine Features: ", new_df2.columns)
+    st.text("Support Vector Machine Features: "+ new_df2.columns)
     
     #xgb
     xgb1 = XGBClassifier(
@@ -342,7 +342,7 @@ elif condition == 'Feature Selection':
     st_yellowbrick(visualizer) 
     new_df2 = new_df.loc[:, visualizer.support_]
     print("Features: ", new_df2.columns)
-    st.text("XGBoost Features: ", new_df2.columns)
+    st.text("XGBoost Features: "+ new_df2.columns)
     
 
 # -------------------------------------------
