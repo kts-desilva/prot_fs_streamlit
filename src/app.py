@@ -50,6 +50,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn import metrics
 from yellowbrick.model_selection import RFECV
 from streamlit_yellowbrick import st_yellowbrick
+from sklearn.feature_selection import SequentialFeatureSelector
 
 # %%
 st.set_page_config(
@@ -146,7 +147,6 @@ raw_eval_df = get_raw_eval_df()
 x, y, x_train, x_test, y_train, y_test = split(clean_df)
 
 def preprocess_data(df):
-    df.shape
     df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
     df.fillna(0, inplace=True)
     
@@ -369,7 +369,82 @@ elif condition == 'Feature Selection':
     fig, ax = plt.subplots(figsize=(3, 3))
     venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
     st.pyplot(fig)
+        
+    st.subheader('Sequential Feature Selector: SGDClassifier')
+    #Selecting the Best important features according to Logistic Regression
+    new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
+                   'SORBS1','NID1']] 
+    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+    sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 6, cv =cv, direction ='forward')
+    sfs_selector.fit(new_df3, y)
+    new_df4_sgd = new_df3.loc[:, sfs_selector.support_]
+    st.text("SGD Features: "+ new_df4_sgd.columns)
     
+    xgb1 = XGBClassifier(
+        learning_rate =0.2,
+        n_estimators=1000,
+        max_depth=5,
+        min_child_weight=1,
+        gamma=0,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        objective= 'binary:logistic',
+        nthread=4,
+        scale_pos_weight=1,
+        seed=27)
+
+    sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = 4, cv =cv, direction ='forward')
+    sfs_selector.fit(new_df3, y)
+    new_df4_xgb = new_df4.loc[:, sfs_selector.support_]
+    st.text("XGB Features: "+ new_df4_xgb.columns)
+    
+    set1 = set(new_df2_sdg.columns)
+    set2 = set(new_df4_xgb.columns)
+
+    fig, ax = plt.subplots(figsize=(3, 3))
+    venn3([set1, set2], ('SGD', 'XGB'))
+    st.pyplot(fig)
+    
+    new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']] 
+    
+    X_train, X_test, y_train, y_test = train_test_split(new_df4, y, test_size=0.33, random_state=0)
+
+    xgb2 = XGBClassifier(
+     learning_rate =0.2,
+     n_estimators=1000,
+     max_depth=5,
+     min_child_weight=1,
+     gamma=0,
+     subsample=0.8,
+     colsample_bytree=0.8,
+     objective= 'binary:logistic',
+     nthread=4,
+     scale_pos_weight=1,
+     seed=27)
+    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+    scores = cross_val_score(xgb1, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+    xgb2.fit(X_train, y_train)
+    
+    y_pred_proba = xgb2.predict_proba(X_test)[::,1]
+    fpr, tpr, _ = xgb2.roc_curve(y_test,  y_pred_proba)
+    fig =  graphs.plot_roc(fpr, tpr,height, width, margin)
+    st.plotly_chart(fig)
+    
+    model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
+    scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+    model3.fit(X_train, y_train)
+    y_pred_proba_rf = model3.predict_proba(X_test)[::,1]
+    fpr_rf, tpr_rf, _ = model3.roc_curve(y_test,  y_pred_proba_rf)
+    fig_rf =  graphs.plot_roc(fpr_rf, tpr_rf,height, width, margin)
+    st.plotly_chart(fig_rf)
+    
+    model2 = SVC(kernel='linear', C=1,probability=True)
+    scores = cross_val_score(model2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+    model2.fit(X_train, y_train)
+    y_pred_proba_svm = model2.predict_proba(X_test)[::,1]
+    fpr_svm, tpr_svm, _ = model2.roc_curve(y_test,  y_pred_proba_svm)
+    fig_svm =  graphs.plot_roc(fpr_svm, tpr_svm,height, width, margin)
+    st.plotly_chart(fig_svm)
 
 # -------------------------------------------
 
