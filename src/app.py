@@ -284,17 +284,16 @@ elif condition == 'Feature Selection':
     st.plotly_chart(fig)
     
     
-#     st.subheader('Recursive Feature Elimination with SGDClassifier')
-#     # SGDClassifier
-#     visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
-#     visualizer.fit(X_combin, y)        # Fit the data to the visualizer
-#     #visualizer.show()
-#     st_yellowbrick(visualizer)  
-#     new_df2 = X_combin.loc[:, visualizer.support_]
-#     st.subheader('Recursive Feature Elimination with SGDClassifier',new_df2)
-#     print("Features: ", X_combin.columns)
-#     st.pyplot()
+    st.subheader('Recursive Feature Elimination with SGDClassifier')
+    # SGDClassifier
+    visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
+    visualizer.fit(X_combin, y)        # Fit the data to the visualizer
+    #visualizer.show()
+    st_yellowbrick(visualizer)  
+    new_df2 = X_combin.loc[:, visualizer.support_]
     
+    st.subheader('Recursive Feature Elimination with SGDClassifier',new_df2)
+    st.text("Features: ", X_combin.columns)
 
 # -------------------------------------------
 
