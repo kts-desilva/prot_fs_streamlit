@@ -286,9 +286,9 @@ elif condition == 'Feature Selection':
     
     st.subheader('Recursive Feature Elimination with SGDClassifier')
     # SGDClassifier
-    new_df = X_combin[['SYNM_proteomics','LAMB2_proteomics','SYNM_proteomics.1','ITGA7_proteomics','ITGA7_proteomics.1','TNS1_proteomics','TNS1_proteomics.1',
-                   'HSPB6_proteomics','DMD_proteomics','OGN_proteomics','PGM5_proteomics','CAVIN2_proteomics','SOD3_proteomics',
-                   'SORBS1_proteomics','SORBS1_proteomics.1','NID1_proteomics','SORBS1_proteomics.2','ABCA8_proteomics','TNS2_proteomics','CD34_proteomics']]
+    new_df = X_combin[['SYNM','LAMB2','ITGA7','TNS1',
+                   'HSPB6','DMD','OGN','PGM5','CAVIN2','SOD3',
+                   'SORBS1','NID1','SORBS1','ABCA8','TNS2','CD34']]
     visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
     visualizer.fit(new_df, y)        # Fit the data to the visualizer
     #visualizer.show()
