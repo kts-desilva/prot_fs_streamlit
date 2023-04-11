@@ -271,9 +271,12 @@ elif condition == 'Feature Selection':
     model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
     scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
     model3.fit(X_train, y_train)
-
+    
+    fig, ax = plt.subplots(figsize=(12, 12))
+   
     RocCurveDisplay.from_estimator(model3, X_test, y_test)
-    st.pyplot()
+    
+    st.pyplot(fig)
     
     st.subheader('Recursive Feature Elimination with SGDClassifier')
     # SGDClassifier
