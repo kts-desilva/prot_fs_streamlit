@@ -198,3 +198,28 @@ def plot_bar(data, x, y, height, width, margin, title_text=None):
     )
 
     return fig
+
+
+@st.cache
+def plot_roc(fpr, tpr, height, width, margin, title_text=None):
+    fig = px.area(
+        x=fpr, y=tpr,
+        title=f'ROC Curve (AUC={auc(fpr, tpr):.4f})',
+        labels=dict(x='False Positive Rate', y='True Positive Rate'),
+        width=width, height=height
+    )
+    fig.add_shape(
+        type='line', line=dict(dash='dash'),
+        x0=0, x1=1, y0=0, y1=1
+    )
+
+    fig.update_yaxes(scaleanchor="x", scaleratio=1)
+    fig.update_xaxes(constrain='domain')
+    #fig.show()
+
+    fig.update_layout(bargap=0.05, height=height, width=width, title_text=title_text, margin=dict(t=margin,
+                                                                                                  b=margin
+                                                                                                )
+    )
+
+    return fig
