@@ -220,9 +220,8 @@ def plot_roc(fpr, tpr, height, width, margin, title_text=None):
     fig.update_xaxes(constrain='domain')
     #fig.show()
 
-    fig.update_layout(bargap=0.05, height=height, width=width, title_text=title_text, margin=dict(t=margin,
-                                                                                                  b=margin
-                                                                                                )
+    fig.update_layout(bargap=0.05, height=height, width=width, title_text=title_text, title_x=0.5,
+                      margin=dict(t=margin,b=margin)
     )
 
     return fig
