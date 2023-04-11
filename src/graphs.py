@@ -208,7 +208,7 @@ def plot_roc(fpr, tpr, height, width, margin, title_text=None):
         x=fpr, y=tpr,
         title=f'ROC Curve (AUC={auc(fpr, tpr):.4f})',
         labels=dict(x='False Positive Rate', y='True Positive Rate'),
-        width=width, height=height
+        width=700, height=500
     )
     fig.add_shape(
         type='line', line=dict(dash='dash'),
