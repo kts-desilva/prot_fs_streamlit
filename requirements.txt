@@ -12,3 +12,4 @@ matplotlib
 seaborn
 yellowbrick
 streamlit-yellowbrick
+matplotlib-venn
