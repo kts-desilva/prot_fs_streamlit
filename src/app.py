@@ -364,8 +364,9 @@ elif condition == 'Feature Selection':
     set2 = set(new_df2_svm.columns)
     set3 = set(new_df2_rf.columns)
 
+    fig, ax = plt.subplots(figsize=(3, 3))
     venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
-    st.pyplot()
+    st.pyplot(fig)
     
 
 # -------------------------------------------
