@@ -286,9 +286,13 @@ elif condition == 'Feature Selection':
     
     st.subheader('Recursive Feature Elimination with SGDClassifier')
     # SGDClassifier
-    new_df = X_combin[['SYNM','LAMB2','ITGA7','TNS1',
-                   'HSPB6','DMD','OGN','PGM5','CAVIN2','SOD3',
-                   'SORBS1','NID1','SORBS1','ABCA8','TNS2','CD34']]
+    prots = []
+    with open(os.path.join(os.path.abspath(''), 'data', 'diff_exp_proteins.txt')) as f:
+        prots = f.readlines()
+    new_df = X_combin[prots]
+#     new_df = X_combin[['SYNM','LAMB2','ITGA7','TNS1',
+#                    'HSPB6','DMD','OGN','PGM5','CAVIN2','SOD3',
+#                    'SORBS1','NID1','SORBS1','ABCA8','TNS2','CD34']]
     visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
     visualizer.fit(new_df, y)        # Fit the data to the visualizer
     #visualizer.show()
