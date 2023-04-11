@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.metrics import r2_score
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import roc_curve, auc
 import pandas as pd
 
 
