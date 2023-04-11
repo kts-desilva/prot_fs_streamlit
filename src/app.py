@@ -317,16 +317,16 @@ elif condition == 'Feature Selection':
     st.text("SGDClassifier Features: "+ new_df2_sdg.columns)
     
     #rf-taking too much time
-#     st.subheader('Recursive Feature Elimination with Random Forest')
-#     cv_rf = StratifiedKFold(3)
-#     visualizer_rf = RFECV(RandomForestClassifier(), cv=cv_rf, scoring='f1_weighted')
-#     visualizer_rf.fit(new_df, y)
-#     #visualizer_rf.show()
-#     st_yellowbrick(visualizer_rf) 
-#     new_df2 = new_df.loc[:, visualizer_rf.support_]
-#     print("Features: ", new_df2.columns)
-#     #find_if_correct_features_found(new_df2.columns)
-#     st.text("Random Forest Features: "+ new_df2.columns)
+    st.subheader('Recursive Feature Elimination with Random Forest')
+    cv_rf = StratifiedKFold(3)
+    visualizer_rf = RFECV(RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100), cv=cv_rf, scoring='f1_weighted')
+    visualizer_rf.fit(new_df, y)
+    #visualizer_rf.show()
+    st_yellowbrick(visualizer_rf) 
+    new_df2_rf = new_df.loc[:, visualizer_rf.support_]
+    print("Features: ", new_df2_rf.columns)
+    #find_if_correct_features_found(new_df2.columns)
+    st.text("Random Forest Features: "+ new_df2_rf.columns)
     
     #svm
     st.subheader('Recursive Feature Elimination with Support Vector Machine')
@@ -340,31 +340,31 @@ elif condition == 'Feature Selection':
     st.text("Support Vector Machine Features: "+ new_df2_svm.columns)
     
     #xgb
-    xgb1 = XGBClassifier(
-        learning_rate =0.2,
-        n_estimators=1000,
-        max_depth=5,
-        min_child_weight=1,
-        gamma=0,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        objective= 'binary:logistic',
-        nthread=4,
-        scale_pos_weight=1,
-        seed=27)
-    visualizer = RFECV(xgb1)
-    visualizer.fit(new_df, y)
-    #visualizer.show() 
-    st_yellowbrick(visualizer) 
-    new_df2_xgb = new_df.loc[:, visualizer.support_]
-    print("Features: ", new_df2.columns)
-    st.text("XGBoost Features: "+ new_df2_xgb.columns)
+#     xgb1 = XGBClassifier(
+#         learning_rate =0.2,
+#         n_estimators=1000,
+#         max_depth=5,
+#         min_child_weight=1,
+#         gamma=0,
+#         subsample=0.8,
+#         colsample_bytree=0.8,
+#         objective= 'binary:logistic',
+#         nthread=4,
+#         scale_pos_weight=1,
+#         seed=27)
+#     visualizer = RFECV(xgb1)
+#     visualizer.fit(new_df, y)
+#     #visualizer.show() 
+#     st_yellowbrick(visualizer) 
+#     new_df2_xgb = new_df.loc[:, visualizer.support_]
+#     print("Features: ", new_df2.columns)
+#     st.text("XGBoost Features: "+ new_df2_xgb.columns)
     
     set1 = set(new_df2_sdg.columns)
     set2 = set(new_df2_svm.columns)
-    set3 = set(new_df2_xgb.columns)
+    set3 = set(new_df2_rf.columns)
 
-    venn3([set1, set2, set3], ('SDG', 'SVM', 'XGB'))
+    venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
     st.pyplot()
     
 
