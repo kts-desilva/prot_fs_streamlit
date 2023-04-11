@@ -280,7 +280,7 @@ elif condition == 'Feature Selection':
     
     y_pred_proba = model3.predict_proba(X_test)[::,1]
     fpr, tpr, _ = metrics.roc_curve(y_test,  y_pred_proba)
-    fig = plot_roc(fpr, tpr,height, width, margin)
+    fig =  graphs.plot_roc(fpr, tpr,height, width, margin)
     st.plotly_chart(fig)
     
     
