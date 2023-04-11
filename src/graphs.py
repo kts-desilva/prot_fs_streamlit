@@ -203,7 +203,7 @@ def plot_bar(data, x, y, height, width, margin, title_text=None):
 
 @st.cache
 def plot_roc(fpr, tpr, height, width, margin, title_text=None):
-    print('AUC',auc(fpr, tpr))
+    print("************************AUC*************************",auc(fpr, tpr))
     fig = px.area(
         x=fpr, y=tpr,
         title=f'ROC Curve (AUC={auc(fpr, tpr):.4f})',
