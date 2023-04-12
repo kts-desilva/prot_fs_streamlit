@@ -398,7 +398,7 @@ elif condition == 'Feature Selection':
     new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
     st.text("XGB Features: "+ new_df4_xgb.columns)
     
-    set1 = set(new_df2_sdg.columns)
+    set1 = set(new_df4_sgd.columns)
     set2 = set(new_df4_xgb.columns)
 
     fig, ax = plt.subplots(figsize=(3, 3))
