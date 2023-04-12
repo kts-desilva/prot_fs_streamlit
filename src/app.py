@@ -399,7 +399,7 @@ elif condition == 'Feature Selection':
         new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
                        'SORBS1','NID1']] 
         cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-        sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 6, cv =cv, direction ='forward')
+        sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
         sfs_selector.fit(new_df3, y)
         new_df4_sgd = new_df3.loc[:, sfs_selector.support_]
         st.text("SGD Features: "+ new_df4_sgd.columns)
@@ -425,10 +425,11 @@ elif condition == 'Feature Selection':
         set3 = set(new_df4_sgd.columns)
         set4 = set(new_df4_xgb.columns)
 
-        print(set3, set4)
-        fig, ax = plt.subplots(figsize=(3, 3))
-        venn3([set3, set4], ('SGD', 'XGB'))
-        st.pyplot(fig)
+        print(set3)
+        print(set4)
+#         fig, ax = plt.subplots(figsize=(3, 3))
+#         venn3([set3, set4], ('SGD', 'XGB'))
+#         st.pyplot(fig)
     
     new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']] 
     
