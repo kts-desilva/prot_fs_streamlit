@@ -171,7 +171,7 @@ uploaded_file = st.sidebar.file_uploader("Upload Dataset",type=["csv","xlsx","xl
 
 if uploaded_file is not None:
     raw_data = pd.read_csv(uploaded_file)
-    st.write(raw_data)
+    #st.write(raw_data)
     
 # ------------- Introduction ------------------------
 
