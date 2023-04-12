@@ -317,7 +317,8 @@ elif condition == 'Feature Selection':
         st.subheader('Recursive Feature Elimination (RFE)')
         options = st.sidebar.multiselect(
         'Select RFE Algorithms',
-        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier', 'XGBoost'])
+        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier', 'XGBoost'],
+        default  = ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier'])
 
         st.subheader('Recursive Feature Elimination with SGDClassifier')
         # SGDClassifier
@@ -390,7 +391,8 @@ elif condition == 'Feature Selection':
     if(sfs):
         options = st.sidebar.multiselect(
         'Select RFE Algorithms',
-        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'])
+        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
+        default=['Stochastic Gradient Descent Classifier','XGBoost'])
 
         st.subheader('Sequential Feature Selector: SGDClassifier')
         #Selecting the Best important features according to Logistic Regression
