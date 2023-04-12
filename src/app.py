@@ -334,7 +334,8 @@ elif condition == 'Feature Selection':
         #visualizer.show()
         st_yellowbrick(visualizer)  
         new_df2_sdg = new_df.loc[:, visualizer.support_]
-        st.text("SGDClassifier Features: "+ new_df2_sdg.columns)
+        st.text("SGDClassifier Features: ")
+        st.text(new_df2_sdg.columns)
 
         #rf-taking too much time
         st.subheader('Recursive Feature Elimination with Random Forest')
@@ -346,7 +347,8 @@ elif condition == 'Feature Selection':
         new_df2_rf = new_df.loc[:, visualizer_rf.support_]
         print("Features: ", new_df2_rf.columns)
         #find_if_correct_features_found(new_df2.columns)
-        st.text("Random Forest Features: "+ new_df2_rf.columns)
+        st.text("Random Forest Features: ")
+        st.text(new_df2_rf.columns)
 
         #svm
         st.subheader('Recursive Feature Elimination with Support Vector Machine')
@@ -357,7 +359,8 @@ elif condition == 'Feature Selection':
         new_df2_svm = new_df.loc[:, visualizer.support_]
         print("Features: ", new_df2_svm.columns)
         #find_if_correct_features_found(new_df2.columns)
-        st.text("Support Vector Machine Features: "+ new_df2_svm.columns)
+        st.text("Support Vector Machine Features: ")
+        st.text(new_df2_svm.columns)
 
         #xgb
     #     xgb1 = XGBClassifier(
@@ -423,7 +426,8 @@ elif condition == 'Feature Selection':
         sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = 4, cv =cv, direction ='forward')
         sfs_selector.fit(new_df3, y)
         new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
-        st.text("XGB Features: "+ new_df4_xgb.columns)
+        st.text("XGB Features: ")
+        st.text(new_df4_xgb.columns)
 
         set3 = set(new_df4_sgd.columns)
         set4 = set(new_df4_xgb.columns)
@@ -457,6 +461,7 @@ elif condition == 'Feature Selection':
     y_pred_proba = xgb2.predict_proba(X_test)[::,1]
     fpr, tpr, _ =  metrics.roc_curve(y_test,  y_pred_proba)
     fig =  graphs.plot_roc(fpr, tpr,height, width, margin)
+    st.text("XGB ROC Curve: ")
     st.plotly_chart(fig)
     
     model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
@@ -465,6 +470,7 @@ elif condition == 'Feature Selection':
     y_pred_proba_rf = model3.predict_proba(X_test)[::,1]
     fpr_rf, tpr_rf, _ = metrics.roc_curve(y_test,  y_pred_proba_rf)
     fig_rf =  graphs.plot_roc(fpr_rf, tpr_rf,height, width, margin)
+    st.text("Random Forest ROC Curve: ")
     st.plotly_chart(fig_rf)
     
     model2 = SVC(kernel='linear', C=1,probability=True)
@@ -473,6 +479,7 @@ elif condition == 'Feature Selection':
     y_pred_proba_svm = model2.predict_proba(X_test)[::,1]
     fpr_svm, tpr_svm, _ = metrics.roc_curve(y_test,  y_pred_proba_svm)
     fig_svm =  graphs.plot_roc(fpr_svm, tpr_svm,height, width, margin)
+    st.text("SVM ROC Curve: ")
     st.plotly_chart(fig_svm)
 
 # -------------------------------------------
