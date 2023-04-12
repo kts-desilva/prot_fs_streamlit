@@ -390,7 +390,7 @@ elif condition == 'Feature Selection':
     if(sfs):
         options = st.sidebar.multiselect(
         'Select RFE Algorithms',
-        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost''])
+        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'])
 
         st.subheader('Sequential Feature Selector: SGDClassifier')
         #Selecting the Best important features according to Logistic Regression
