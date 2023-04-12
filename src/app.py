@@ -384,6 +384,9 @@ elif condition == 'Feature Selection':
         set2 = set(new_df2_svm.columns)
         set3 = set(new_df2_rf.columns)
 
+        print(set1)
+        print(set2)
+        print(set3)
         fig, ax = plt.subplots(figsize=(3, 3))
         venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
         st.pyplot(fig)
@@ -452,7 +455,7 @@ elif condition == 'Feature Selection':
     xgb2.fit(X_train, y_train)
     
     y_pred_proba = xgb2.predict_proba(X_test)[::,1]
-    fpr, tpr, _ = xgb2.roc_curve(y_test,  y_pred_proba)
+    fpr, tpr, _ =  metrics.roc_curve(y_test,  y_pred_proba)
     fig =  graphs.plot_roc(fpr, tpr,height, width, margin)
     st.plotly_chart(fig)
     
@@ -460,7 +463,7 @@ elif condition == 'Feature Selection':
     scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
     model3.fit(X_train, y_train)
     y_pred_proba_rf = model3.predict_proba(X_test)[::,1]
-    fpr_rf, tpr_rf, _ = model3.roc_curve(y_test,  y_pred_proba_rf)
+    fpr_rf, tpr_rf, _ = metrics.roc_curve(y_test,  y_pred_proba_rf)
     fig_rf =  graphs.plot_roc(fpr_rf, tpr_rf,height, width, margin)
     st.plotly_chart(fig_rf)
     
@@ -468,7 +471,7 @@ elif condition == 'Feature Selection':
     scores = cross_val_score(model2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
     model2.fit(X_train, y_train)
     y_pred_proba_svm = model2.predict_proba(X_test)[::,1]
-    fpr_svm, tpr_svm, _ = model2.roc_curve(y_test,  y_pred_proba_svm)
+    fpr_svm, tpr_svm, _ = metrics.roc_curve(y_test,  y_pred_proba_svm)
     fig_svm =  graphs.plot_roc(fpr_svm, tpr_svm,height, width, margin)
     st.plotly_chart(fig_svm)
 
