@@ -395,7 +395,7 @@ elif condition == 'Feature Selection':
 
     sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = 4, cv =cv, direction ='forward')
     sfs_selector.fit(new_df3, y)
-    new_df4_xgb = new_df4.loc[:, sfs_selector.support_]
+    new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
     st.text("XGB Features: "+ new_df4_xgb.columns)
     
     set1 = set(new_df2_sdg.columns)
