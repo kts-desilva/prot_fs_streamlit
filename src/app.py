@@ -308,10 +308,10 @@ elif condition == 'Feature Selection':
     st.plotly_chart(fig)
     
     st.sidebar.text('Select Feature Selection Methods')
-    rfe = st.sidebar.checkbox('Recursive Feature Elimination')
-    sfs = st.sidebar.checkbox('Sequential Feature Selection')
+    rfe = st.sidebar.checkbox('Recursive Feature Elimination', value=True)
+    sfs = st.sidebar.checkbox('Sequential Feature Selection', value=True)
     
-    ecv = st.sidebar.checkbox('Enable cross validation')
+    ecv = st.sidebar.checkbox('Enable cross validation', value=True)
     
     if(rfe):
         st.subheader('Recursive Feature Elimination (RFE)')
