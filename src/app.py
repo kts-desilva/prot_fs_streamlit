@@ -398,11 +398,12 @@ elif condition == 'Feature Selection':
     new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
     st.text("XGB Features: "+ new_df4_xgb.columns)
     
-    set1 = set(new_df4_sgd.columns)
-    set2 = set(new_df4_xgb.columns)
+    set3 = set(new_df4_sgd.columns)
+    set4 = set(new_df4_xgb.columns)
 
+    print(set3, set4)
     fig, ax = plt.subplots(figsize=(3, 3))
-    venn3([set1, set2], ('SGD', 'XGB'))
+    venn3([set3, set4], ('SGD', 'XGB'))
     st.pyplot(fig)
     
     new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']] 
