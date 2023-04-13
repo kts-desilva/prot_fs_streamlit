@@ -180,6 +180,8 @@ def preprocess_data(df):
 
 # ----------- Global Sidebar ---------------
 
+st.sidebar.title("SENUMAI: SElect New Unique Marker AI")
+
 condition = st.sidebar.selectbox(
     "Select the visualization",
     ("Introduction", "EDA", "Feature Selection", "Model Prediction")
@@ -195,7 +197,7 @@ if uploaded_file is not None:
 
 if condition == 'Introduction':
     st.image(os.path.join(os.path.abspath(''), 'data', 'histology.jpg'))
-    st.subheader('SENUMAI: SElect New Unique Marker AI')
+    st.subheader('SENUMAI Introduction')
     
     ## FALTA O CHECK ON GITHUB
     st.write("""
@@ -344,7 +346,7 @@ elif condition == 'Feature Selection':
         new_df2_sdg = new_df.loc[:, visualizer.support_]
         st.text("SGDClassifier Features: ")
         #st.text(new_df2_sdg.columns)
-        st.text(' '.join(new_df2_sdg.columns))
+        st.text(', '.join(new_df2_sdg.columns))
 
         #rf-taking too much time
         st.subheader('Recursive Feature Elimination with Random Forest')
@@ -357,7 +359,8 @@ elif condition == 'Feature Selection':
         print("Features: ", new_df2_rf.columns)
         #find_if_correct_features_found(new_df2.columns)
         st.text("Random Forest Features: ")
-        st.text(new_df2_rf.columns)
+        #st.text(new_df2_rf.columns)
+        st.text(', '.join(new_df2_rf.columns))
 
         #svm
         st.subheader('Recursive Feature Elimination with Support Vector Machine')
@@ -369,7 +372,8 @@ elif condition == 'Feature Selection':
         print("Features: ", new_df2_svm.columns)
         #find_if_correct_features_found(new_df2.columns)
         st.text("Support Vector Machine Features: ")
-        st.text(new_df2_svm.columns)
+        #st.text(new_df2_svm.columns)
+        st.text(', '.join(new_df2_svm.columns))
 
         #xgb
     #     xgb1 = XGBClassifier(
@@ -417,7 +421,8 @@ elif condition == 'Feature Selection':
         sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
         sfs_selector.fit(new_df3, y)
         new_df4_sgd = new_df3.loc[:, sfs_selector.support_]
-        st.text("SGD Features: "+ new_df4_sgd.columns)
+        st.text("SGD Features: ")
+        st.text(', '.join(new_df4_sgd.columns))
 
         xgb1 = XGBClassifier(
             learning_rate =0.2,
@@ -436,7 +441,8 @@ elif condition == 'Feature Selection':
         sfs_selector.fit(new_df3, y)
         new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
         st.text("XGB Features: ")
-        st.text(new_df4_xgb.columns)
+        #st.text(new_df4_xgb.columns)
+        st.text(', '.join(new_df4_xgb.columns))
 
         set3 = set(new_df4_sgd.columns)
         set4 = set(new_df4_xgb.columns)
