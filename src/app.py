@@ -403,7 +403,7 @@ elif condition == 'Feature Selection':
         print(set1)
         print(set2)
         print(set3)
-        fig, ax = plt.subplots(figsize=(3, 3))
+        fig, ax = plt.subplots(figsize=(5, 5))
         venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
         st.pyplot(fig)
     
@@ -449,7 +449,7 @@ elif condition == 'Feature Selection':
 
         print(set3)
         print(set4)
-        fig, ax = plt.subplots(figsize=(3, 3))
+        fig, ax = plt.subplots(figsize=(5, 5))
         venn2([set3, set4], ('SGD', 'XGB'))
         st.pyplot(fig)
     
