@@ -264,7 +264,7 @@ elif condition == 'EDA':
 
     height, width, margin = 450, 1500, 10
 
-    st.subheader('Diasese Proteomics Distribution')
+    st.subheader('Disease Proteomics Distribution')
 
     select_city_eda = st.selectbox(
         'Select the Disease Type',
