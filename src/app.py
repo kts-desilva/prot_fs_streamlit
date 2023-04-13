@@ -484,7 +484,7 @@ elif condition == 'Model Prediction':
      scale_pos_weight=1,
      seed=27)
     cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-    scores = cross_val_score(xgb1, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+    scores = cross_val_score(xgb2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
     xgb2.fit(X_train, y_train)
     
     y_pred_proba = xgb2.predict_proba(X_test)[::,1]
