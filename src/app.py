@@ -177,7 +177,7 @@ if uploaded_file is not None:
 
 if condition == 'Introduction':
     st.image(os.path.join(os.path.abspath(''), 'data', 'histology.jpg'))
-    st.subheader('About')
+    st.subheader('SENUMAI: SElect New Unique Marker AI')
     
     ## FALTA O CHECK ON GITHUB
     st.write("""
