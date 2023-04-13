@@ -233,17 +233,7 @@ if condition == 'Introduction':
 # ------------- EDA ------------------------
 
 elif condition == 'EDA':
-    type_of_data = st.radio(
-        "Type of Data",
-        ('Raw Data', 'Cleaned Data'),
-        help='Data source that will be displayed in the charts'
-    )
-
-    if type_of_data == 'Raw Data':
-        data = raw_df.copy()
-    else:
-        data = clean_df.copy()
-
+    data = raw_df.copy()
     with st.beta_container():
         st.header('Descriptive Statistics\n')
         col1, col2 = st.beta_columns([1, 3])
