@@ -54,7 +54,7 @@ from sklearn.feature_selection import SequentialFeatureSelector
 
 # %%
 st.set_page_config(
-    page_title="Predicting Real Estate Prices in Brazil",
+    page_title="Selecting New Unique Protoemic Markers",
     page_icon="🧙‍♂️",
     layout="wide",
     initial_sidebar_state="expanded",
