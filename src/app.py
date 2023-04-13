@@ -453,8 +453,7 @@ elif condition == 'Feature Selection':
         venn2([set3, set4], ('SGD', 'XGB'))
         st.pyplot(fig)
     
-    new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']] 
-    new_df4.to_csv(os.path.join(os.path.abspath('../data'), 'processed_data.csv'), index=False)
+    new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']]
 
 # -------------------------------------------
 
