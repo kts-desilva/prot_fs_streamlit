@@ -93,6 +93,13 @@ def get_processed_data():
     processed_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'processed_data.csv'))
     return processed_data
 
+def get_annotation_data():
+    """
+    This function return a pandas DataFrame with the annotation data.
+    """
+
+    annotation_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'annotation_data.csv'))
+    return annotation_data
 
 #@st.cache
 def get_raw_eval_df():
@@ -155,6 +162,7 @@ raw_eval_df = get_raw_eval_df()
 #eval_df = load_models_df(raw_eval_df)
 x, y, x_train, x_test, y_train, y_test = split(clean_df)
 processed_data = get_processed_data()
+annotation_data =  get_annotation_data()
 
 def preprocess_data(df):
     df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
@@ -455,6 +463,7 @@ elif condition == 'Model Prediction':
     #todo: add pre-trained model option also
     
     df = processed_data.copy()
+    y = annotation_data.copy()
     X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.33, random_state=0)
 
     xgb2 = XGBClassifier(
@@ -497,71 +506,5 @@ elif condition == 'Model Prediction':
     st.text("SVM ROC Curve: ")
     st.plotly_chart(fig_svm)
 
-
 # -------------------------------------------
-
-elif condition == 'Model Evaluation':
-    st.subheader('Available Models')
-
-    st.dataframe(eval_df.drop(columns=['all_scores_cv', 'pipe_file_name', 'model_trained']))
-
-    select_model_meval = st.sidebar.selectbox(
-        'Select the Model',
-        [i for i in eval_df['name'].unique()]  
-    )
-
-    select_custom_features_meval = st.sidebar.select_slider(
-        'Create Custom Features?',
-        [False, True]
-    )
-
-    select_custom_target_meval = st.sidebar.select_slider(
-        'Perform Target Transformation?',
-        [False, True]
-    )
-
-    model_trained_meval = eval_df.loc[(eval_df['name'] == select_model_meval) & (eval_df['custom_features'] == select_custom_features_meval) & (eval_df['custom_target'] == select_custom_target_meval)]['model_trained'].iloc[0]
-
-# -------------- figs -----------------
-
-    height, width, margin = 450, 1500, 30
-
-    st.subheader('Distribution of the Target Variable')
-
-    fig = graphs.plot_distplot(
-        y_real=y_test, 
-        y_predict=model_trained_meval.predict(x_test),
-        height=height, 
-        width=width, 
-        margin=margin,
-        title_text='Predicted and Real Value'
-    )
-
-    st.plotly_chart(fig)
-
-    st.subheader('Distribution of the Residuals')
-
-    # predict the values of the entire data
-    prediction = model_trained_meval.predict(x)
-    # calculate the residual
-    resid = prediction - y
-
-    # create a copy to not alter the original data
-    df_plot = clean_df.copy()
-    # create a column to identify the data regarding to train or test
-    df_plot['split'] = 'train'
-    df_plot.loc[x_test.index, 'split'] = 'test'
-    df_plot['prediction'] = prediction
-    df_plot['resid'] = resid
-
-    # plot the residual plot with the histograms
-    fig = graphs.plot_scatter(data=df_plot, x='prediction', y='resid', residual=True, height=height, width=width, margin=margin, title_text='Residuals per Split')
-    
-    st.plotly_chart(fig)
-
-    st.subheader('Boxplot of RMSE in Cross Validation')
-
-    fig = graphs.plot_boxplot(data=eval_df, x=None, y=None, model_name=select_model_meval, custom_feature=select_custom_features_meval, custom_target=select_custom_target_meval, single_box=True, title_text='Cross Validation with 5 Folds', height=height, width=width, margin=margin)
-
-    st.plotly_chart(fig)
 
