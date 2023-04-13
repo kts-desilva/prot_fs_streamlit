@@ -20,7 +20,7 @@ from scipy import stats
 #import missingno as msno
 import matplotlib.pyplot as plt
 import seaborn as sns
-from matplotlib_venn import venn3
+from matplotlib_venn import venn3, venn2
 
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, StratifiedKFold, cross_val_predict,  KFold
 from xgboost.sklearn import XGBClassifier
@@ -84,6 +84,15 @@ def get_cleaned_data():
     clean_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'houses_to_rent_v2_fteng.csv'))
     return clean_data
 
+#@st.cache
+def get_processed_data():
+    """
+    This function return a pandas DataFrame with the processed data.
+    """
+
+    processed_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'processed_data.csv'))
+    return processed_data
+
 
 #@st.cache
 def get_raw_eval_df():
@@ -145,6 +154,7 @@ clean_df = get_cleaned_data()
 raw_eval_df = get_raw_eval_df()
 #eval_df = load_models_df(raw_eval_df)
 x, y, x_train, x_test, y_train, y_test = split(clean_df)
+processed_data = get_processed_data()
 
 def preprocess_data(df):
     df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
@@ -164,7 +174,7 @@ def preprocess_data(df):
 
 condition = st.sidebar.selectbox(
     "Select the visualization",
-    ("Introduction", "EDA", "Feature Selection", "Model Prediction", "Model Evaluation")
+    ("Introduction", "EDA", "Feature Selection", "Model Prediction")
 )
 
 uploaded_file = st.sidebar.file_uploader("Upload Dataset",type=["csv","xlsx","xls"])
@@ -325,7 +335,8 @@ elif condition == 'Feature Selection':
         st_yellowbrick(visualizer)  
         new_df2_sdg = new_df.loc[:, visualizer.support_]
         st.text("SGDClassifier Features: ")
-        st.text(new_df2_sdg.columns)
+        #st.text(new_df2_sdg.columns)
+        st.text(' '.join(new_df2_sdg.columns))
 
         #rf-taking too much time
         st.subheader('Recursive Feature Elimination with Random Forest')
@@ -424,13 +435,27 @@ elif condition == 'Feature Selection':
 
         print(set3)
         print(set4)
-#         fig, ax = plt.subplots(figsize=(3, 3))
-#         venn3([set3, set4], ('SGD', 'XGB'))
-#         st.pyplot(fig)
+        fig, ax = plt.subplots(figsize=(3, 3))
+        venn2([set3, set4], ('SGD', 'XGB'))
+        st.pyplot(fig)
     
     new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']] 
+    new_df4.to_csv(os.path.join(os.path.abspath('../data'), 'processed_data.csv'), index=False)
+
+# -------------------------------------------
+
+elif condition == 'Model Prediction':
+    st.subheader('Classification Models')
     
-    X_train, X_test, y_train, y_test = train_test_split(new_df4, y, test_size=0.33, random_state=0)
+    options = st.sidebar.multiselect(
+        'Select Classification Algorithms',
+        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier', 'XGBoost'],
+        default  = ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier'])
+    
+    #todo: add pre-trained model option also
+    
+    df = processed_data.copy()
+    X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.33, random_state=0)
 
     xgb2 = XGBClassifier(
      learning_rate =0.2,
@@ -471,100 +496,6 @@ elif condition == 'Feature Selection':
     fig_svm =  graphs.plot_roc(fpr_svm, tpr_svm,height, width, margin)
     st.text("SVM ROC Curve: ")
     st.plotly_chart(fig_svm)
-
-# -------------------------------------------
-
-elif condition == 'Model Prediction':
-
-    select_model_mpredict = st.sidebar.selectbox(
-        'Select the Model',
-        [i for i in eval_df['name'].unique()]  
-    )
-
-    select_custom_features_mpredict = st.sidebar.select_slider(
-        'Create Custom Features?',
-        [False, True],
-        help='Feature Creation according to the FeatureCreation class in the load_models module'
-    )
-
-    select_custom_target_mpredict = st.sidebar.select_slider(
-        'Perform Target Transformation?',
-        [False, True],
-        help='Perform a logarithm transformation in the target variable'
-    )
-
-    select_city = st.sidebar.selectbox(
-        'Select the City',
-        clean_df['city'].value_counts().index
-    )
-
-    select_area = st.sidebar.number_input(
-        'Select the value of Area',
-        help='The value must be in square meters (m²)',
-        min_value=1,
-    )
-
-    select_rooms = st.sidebar.number_input(
-        'Select the number of Rooms',
-        min_value=1,
-    )
-
-    select_bathrooms = st.sidebar.number_input(
-        'Select the number of Bathrooms',
-        min_value=1,
-    )
-
-    select_parking_spaces = st.sidebar.number_input(
-        'Select the number of Parking Spaces',
-        min_value=0,
-    )
-
-    select_animal = st.sidebar.select_slider(
-        'Accept Animals?',
-        ['acept', 'not acept']
-    )
-
-    select_furniture = st.sidebar.select_slider(
-        'It is furnished',
-        ['furnished', 'not furnished']
-    )
-
-    select_hoa = st.sidebar.number_input(
-        'Select the value of Hoa',
-        help='The values must be in Reais (R$)',
-        min_value=0,
-    )
-
-    select_property_tax = st.sidebar.number_input(
-        'Select the value of Property Tax',
-        help='The values must be in Reais (R$)',
-        min_value=0,
-    )
-
-    select_fire_insurance = st.sidebar.number_input(
-        'Select the value of Fire Insurance',
-        help='The values must be in Reais (R$)',
-        min_value=0,
-    )
-
-    predict_array = [select_city, select_area, select_rooms, select_bathrooms, select_parking_spaces, select_animal, select_furniture, select_hoa, select_property_tax, select_fire_insurance]
-
-    model_trained_mpredict = eval_df.loc[(eval_df['name'] == select_model_mpredict) & (eval_df['custom_features'] == select_custom_features_mpredict) & (eval_df['custom_target'] == select_custom_target_mpredict)]['model_trained'].iloc[0]
-
-    value_to_predict = pd.DataFrame(
-        [predict_array], columns=clean_df.drop(columns='rent amount (R$)').columns
-    )
-
-    st.subheader('Available Models')
-
-    st.dataframe(eval_df.drop(columns=['all_scores_cv', 'pipe_file_name', 'model_trained']))
-
-    if st.button('Predict', help='Be certain to check the parameters on the sidebar'):
-        predicted_value = model_trained_mpredict.predict(value_to_predict)
-        st.success(f'The predicted value is R$ {round(predicted_value[0], 2)}')
-
-        with st.beta_expander("Model Parameters"):
-            st.write(f"The model chosen was {select_model_mpredict}. \n\n Parameters:", eval(eval_df.loc[(eval_df['name'] == select_model_mpredict) & (eval_df['custom_features'] == select_custom_features_mpredict) & (eval_df['custom_target'] == select_custom_target_mpredict)]['params'].iloc[0])[0])
 
 
 # -------------------------------------------
