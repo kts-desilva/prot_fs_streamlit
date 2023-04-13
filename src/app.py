@@ -465,6 +465,8 @@ elif condition == 'Model Prediction':
         ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier', 'XGBoost'],
         default  = ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier'])
     
+    height, width, margin = 450, 1500, 25
+    
     #todo: add pre-trained model option also
     
     df = processed_data.copy()
