@@ -301,21 +301,21 @@ elif condition == 'Feature Selection':
     X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
     height, width, margin = 450, 1500, 25
     
-    st.subheader('Intial Inspection with XGBoost Classifier')
+#     st.subheader('Intial Inspection with XGBoost Classifier')
     
-    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-    model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
-    scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
-    model3.fit(X_train, y_train)
+#     cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+#     model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
+#     scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+#     model3.fit(X_train, y_train)
     
 #     fig, ax = plt.subplots(figsize=(3.5, 1.5))
 #     RocCurveDisplay.from_estimator(model3, X_test, y_test)
 #     st.pyplot(fig)
     
-    y_pred_proba = model3.predict_proba(X_test)[::,1]
-    fpr, tpr, _ = metrics.roc_curve(y_test,  y_pred_proba)
-    fig =  graphs.plot_roc(fpr, tpr,height, width, margin)
-    st.plotly_chart(fig)
+#     y_pred_proba = model3.predict_proba(X_test)[::,1]
+#     fpr, tpr, _ = metrics.roc_curve(y_test,  y_pred_proba)
+#     fig =  graphs.plot_roc(fpr, tpr,height, width, margin)
+#     st.plotly_chart(fig)
     
     st.sidebar.text('Select Feature Selection Methods')
     rfe = st.sidebar.checkbox('Recursive Feature Elimination', value=True)
