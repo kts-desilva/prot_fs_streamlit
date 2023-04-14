@@ -409,7 +409,7 @@ elif condition == 'Feature Selection':
     
     if(sfs):
         options = st.sidebar.multiselect(
-        'Select RFE Algorithms',
+        'Select SFS Algorithms',
         ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
         default=['Stochastic Gradient Descent Classifier','XGBoost'])
 
