@@ -3,11 +3,11 @@
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://kts-desilva-prot-fs-streamlit-srcapp-eh8dfx.streamlit.app/)
 
 
-This application provides an overview of the brazilian_houses_to_rent dataset from Kaggle. It is a dataset that provides rent prices for real estate properties in Brazil.
+This application provides an overview of the ovrain cancer proteomics data from CPTAC data portal. It is a dataset that provides protein expression profiles of ovarian tumor and control samples.
 
 The app it is [deployed](https://kts-desilva-prot-fs-streamlit-srcapp-eh8dfx.streamlit.app/) in Streamlit.
 
-The data were provided from this [source](https://cptac-data-portal.georgetown.edu/). 
+The data were provided from the Clinical Proteomic Tumor Analysis Consortium (CPTAC) [source](https://cptac-data-portal.georgetown.edu/). 
 
 You can check on the sidebar of the app:
 - EDA (Exploratory Data Analysis)
