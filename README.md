@@ -41,7 +41,7 @@ Models:
 - Random Forest
 - Support Vector Machine
 - Stochastic Gradient Descent
-- 
+
 Our main accuracy metric is RMSE. To enhance our model definition, we utilized Cross Validation and Random Search for hyperparameter tuning.
 Further, we have considered using precision, recall and specificity metrics to access the quality of the developed methodlogy.
 
