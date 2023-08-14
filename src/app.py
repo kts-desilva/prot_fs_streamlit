@@ -8,7 +8,7 @@ import tensorflow as tf
 # os.environ['HDF5_DISABLE_VERSION_CHECK']='2'
 from feature_models import create_model, FeatureCreation
 import pickle
-from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
+# from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from tensorflow.keras.models import load_model
 import functools
 from sklearn.model_selection import train_test_split
@@ -112,35 +112,35 @@ def get_raw_eval_df():
 
 
 #@st.cache(hash_funcs={pd.DataFrame: lambda x: x})
-def load_models_df(dataframe):
-    df_evaluated = dataframe.copy()
-    models_list = os.listdir(os.path.join(os.path.abspath(''), 'models'))
-    rep = {"pipe": "model", "pickle": "h5"}
-    for index, row in df_evaluated.iterrows():
-        # check if the file_name is in our models directory
-        if row['pipe_file_name'] in models_list:
-            # now, load the model.
-            with open(os.path.join(os.path.abspath(''), 'models', row['pipe_file_name']), 'rb') as fid:
-                model_trained = pickle.load(fid)
+# def load_models_df(dataframe):
+#     df_evaluated = dataframe.copy()
+#     models_list = os.listdir(os.path.join(os.path.abspath(''), 'models'))
+#     rep = {"pipe": "model", "pickle": "h5"}
+#     for index, row in df_evaluated.iterrows():
+#         # check if the file_name is in our models directory
+#         if row['pipe_file_name'] in models_list:
+#             # now, load the model.
+#             with open(os.path.join(os.path.abspath(''), 'models', row['pipe_file_name']), 'rb') as fid:
+#                 model_trained = pickle.load(fid)
             
-            # for the keras model, we have to load the model separately and add into the pipeline or transformed target object.
-            if row['name'] == 'NeuralNetwork':
-                model_keras = load_model(os.path.join(os.path.abspath(''), 'models', functools.reduce(lambda a, kv: a.replace(*kv), rep.items(), row['pipe_file_name'])))
-                # check if the target transformer it is active
-                if row['custom_target']:
-                    # reconstruct the model inside a kerasregressor and add inside the transformed target object
-                    model_trained.regressor.set_params(model = KerasRegressor(build_fn=create_model, verbose=0))
-                    # add the keras model inside the pipeline object
-                    model_trained.regressor_.named_steps['model'].model = model_keras
-                else:
-                    model_trained.named_steps['model'].model = model_keras
+#             # for the keras model, we have to load the model separately and add into the pipeline or transformed target object.
+#             if row['name'] == 'NeuralNetwork':
+#                 model_keras = load_model(os.path.join(os.path.abspath(''), 'models', functools.reduce(lambda a, kv: a.replace(*kv), rep.items(), row['pipe_file_name'])))
+#                 # check if the target transformer it is active
+#                 if row['custom_target']:
+#                     # reconstruct the model inside a kerasregressor and add inside the transformed target object
+#                     model_trained.regressor.set_params(model = KerasRegressor(build_fn=create_model, verbose=0))
+#                     # add the keras model inside the pipeline object
+#                     model_trained.regressor_.named_steps['model'].model = model_keras
+#                 else:
+#                     model_trained.named_steps['model'].model = model_keras
 
-            df_evaluated.loc[index, 'model_trained'] = model_trained
+#             df_evaluated.loc[index, 'model_trained'] = model_trained
 
-    # we have to transform our score column to bring it back to a python list
-    df_evaluated['all_scores_cv'] = df_evaluated['all_scores_cv'].apply(lambda x: [float(i) for i in x.strip('[]').split()])
+#     # we have to transform our score column to bring it back to a python list
+#     df_evaluated['all_scores_cv'] = df_evaluated['all_scores_cv'].apply(lambda x: [float(i) for i in x.strip('[]').split()])
     
-    return df_evaluated.sort_values(by='rmse_cv').reset_index(drop=True)
+#     return df_evaluated.sort_values(by='rmse_cv').reset_index(drop=True)
 
 
 #@st.cache
