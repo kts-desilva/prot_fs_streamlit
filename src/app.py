@@ -180,7 +180,7 @@ def preprocess_data(df):
 
 # ----------- Global Sidebar ---------------
 
-st.sidebar.title("SENUMAI: SElect New Unique Marker AI")
+st.sidebar.title("UMAI: Select New Unique Marker AI")
 
 condition = st.sidebar.selectbox(
     "Select the visualization",
@@ -197,7 +197,7 @@ if uploaded_file is not None:
 
 if condition == 'Introduction':
     st.image(os.path.join(os.path.abspath(''), 'data', 'histology.jpg'))
-    st.subheader('SENUMAI Introduction')
+    st.subheader('UMAI Introduction')
     
     ## FALTA O CHECK ON GITHUB
     st.write("""
