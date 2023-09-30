@@ -308,6 +308,9 @@ elif condition == 'Feature Selection':
     X_combin,y = preprocess_data(raw_df)
     X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
     height, width, margin = 450, 1500, 25
+
+    print("y******")
+    print(y)
     
 #     st.subheader('Intial Inspection with XGBoost Classifier')
     
