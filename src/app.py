@@ -169,7 +169,6 @@ def preprocess_data(df):
     #df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
     #df = df[not df.Condition in ["B_V1","A_V1"]]
     df = df[df["Condition"].isin(["B_V1","A_V1"])]
-    st.write(df["Condition"])
     
     df["Binary_Class"] = np.select([df["Condition"] == "B_V1",df["Condition"] == "A_V1"],[ 1, 0])
     df.fillna(0, inplace=True)
@@ -182,9 +181,6 @@ def preprocess_data(df):
     y = df[['Binary_Class']]
 
     X_combin = X_combin.loc[:,~X_combin.columns.duplicated()]
-
-    st.write("y value***********************************")
-    st.write(y)
     
     return (X_combin,y) 
 
@@ -211,7 +207,7 @@ if condition == 'Introduction':
     
     ## FALTA O CHECK ON GITHUB
     st.write("""
-    This application provides an overview of the ovrain cancer proteomics data from CPTAC data portal. It is a dataset that provides protein expression profiles of ovarian tumor and control samples.
+    This application provides an overview of the ovarian cancer proteomics data from CPTAC data portal. It is a dataset that provides protein expression profiles of ovarian tumor and control samples.
 
     The app it is [deployed](https://kts-desilva-prot-fs-streamlit-srcapp-eh8dfx.streamlit.app/) in Streamlit.
 
