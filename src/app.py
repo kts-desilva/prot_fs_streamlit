@@ -466,7 +466,7 @@ elif condition == 'Feature Selection':
         st.pyplot(fig)
     
     #new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']]
-    new_df4 = X_combin[[set3.intersection(set4)]]
+    new_df4 = X_combin[[set.intersection(set3,set4)]]
 
 # -------------------------------------------
 
