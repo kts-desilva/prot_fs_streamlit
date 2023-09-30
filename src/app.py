@@ -172,7 +172,8 @@ def preprocess_data(df):
     df["Binary_Class"] = np.select([df["Condition"] == "B_V1",df["Condition"] == "A_V1"],[ 1, 0])
     df.fillna(0, inplace=True)
     
-    unwanted_columns = ['Patient_ID','Sample_Tumor_Normal','Binary_Class' ]
+    #unwanted_columns = ['Patient_ID','Sample_Tumor_Normal','Binary_Class' ]
+    unwanted_columns = ['Patient_ID','Condition','Binary_Class' ]
 
     # data splitting
     X_combin = df.drop(unwanted_columns, axis=1)
