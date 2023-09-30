@@ -426,8 +426,9 @@ elif condition == 'Feature Selection':
 
         st.subheader('Sequential Feature Selector: SGDClassifier')
         #Selecting the Best important features according to Logistic Regression
-        new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
-                       'SORBS1','NID1']] 
+        # new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
+        #                'SORBS1','NID1']] 
+        new_df3 = X_combin[['K7ES00_H3.3B', 'U3KQK0_H2BC15', 'A0A0C4DH24_IGKV6.21', 'P01814_IGHV2.70', 'A0A0B4J1X5_IGHV3.74']] 
         cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
         sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
         sfs_selector.fit(new_df3, y)
@@ -464,7 +465,8 @@ elif condition == 'Feature Selection':
         venn2([set3, set4], ('SGD', 'XGB'))
         st.pyplot(fig)
     
-    new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']]
+    #new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']]
+     new_df4 = X_combin[[set3.intersection(set4)]]
 
 # -------------------------------------------
 
