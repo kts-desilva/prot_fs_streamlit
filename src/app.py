@@ -168,7 +168,7 @@ annotation_data =  get_annotation_data()
 def preprocess_data(df):
     #df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
     #df = df[not df.Condition in ["B_V1","A_V1"]]
-    df = df[~df["Condition"].isin(["B_V1","A_V1"])]
+    df = df[df["Condition"].isin(["B_V1","A_V1"])]
     st.write(df["Condition"])
     
     df["Binary_Class"] = np.select([df["Condition"] == "B_V1",df["Condition"] == "A_V1"],[ 1, 0])
