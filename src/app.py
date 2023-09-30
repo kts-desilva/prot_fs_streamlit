@@ -180,6 +180,8 @@ def preprocess_data(df):
     y = df[['Binary_Class']]
 
     X_combin = X_combin.loc[:,~X_combin.columns.duplicated()]
+
+    print(y)
     
     return (X_combin,y) 
 
