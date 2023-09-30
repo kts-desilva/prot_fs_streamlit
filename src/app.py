@@ -181,8 +181,8 @@ def preprocess_data(df):
 
     X_combin = X_combin.loc[:,~X_combin.columns.duplicated()]
 
-    st.write(("y value***********************************")
-    st.write((y)
+    st.write("y value***********************************")
+    st.write(y)
     
     return (X_combin,y) 
 
