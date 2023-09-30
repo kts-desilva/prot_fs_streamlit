@@ -340,7 +340,8 @@ elif condition == 'Feature Selection':
         prots = []
         with open(os.path.join(os.path.abspath(''), 'data', 'diff_exp_proteins.txt')) as f:
             prots = f.read().splitlines()
-        new_df = X_combin[prots]
+        #new_df = X_combin[prots]
+        new_df = X_combin
     #     new_df = X_combin[['SYNM','LAMB2','ITGA7','TNS1',
     #                    'HSPB6','DMD','OGN','PGM5','CAVIN2','SOD3',
     #                    'SORBS1','NID1','SORBS1','ABCA8','TNS2','CD34']]
