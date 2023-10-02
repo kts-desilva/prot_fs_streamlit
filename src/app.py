@@ -91,7 +91,8 @@ def get_processed_data():
     This function return a pandas DataFrame with the processed data.
     """
 
-    processed_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'processed_data.csv'))
+    #processed_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'processed_data.csv'))
+    processed_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'processed_data2.csv'))
     return processed_data
 
 def get_annotation_data():
@@ -99,7 +100,8 @@ def get_annotation_data():
     This function return a pandas DataFrame with the annotation data.
     """
 
-    annotation_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'annotation_data.csv'))
+    #annotation_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'annotation_data.csv'))
+    annotation_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'annotation_data2.csv'))
     return annotation_data
 
 #@st.cache
