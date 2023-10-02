@@ -68,11 +68,19 @@ st.set_page_config(
 #@st.cache
 def get_raw_data():
     """
-    This function return a pandas DataFrame with the raw data.
+    This function returns a pandas DataFrame with the raw data.
     """
 
     #raw_df = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'ovarian_clinical_data2.csv'))
-    raw_df = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'zilulu_filtered_data.csv'))
+    
+    uploaded_file = st.sidebar.file_uploader("Upload Dataset",type=["csv","xlsx","xls"])
+
+    if uploaded_file is not None:
+        raw_data = pd.read_csv(uploaded_file)
+        #st.write(raw_data)
+    else:
+        raw_df = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'zilulu_filtered_data.csv'))
+    
     return raw_df
 
 
@@ -167,6 +175,11 @@ x, y, x_train, x_test, y_train, y_test = split(clean_df)
 processed_data = get_processed_data()
 annotation_data =  get_annotation_data()
 
+character_columns = raw_df.select_dtypes(include=['object']).columns
+
+# Create a select box for character columns
+selected_column = st.selectbox('Select the class variable column:', character_columns)
+
 def preprocess_data(df):
     #df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
     #df = df[not df.Condition in ["B_V1","A_V1"]]
@@ -194,12 +207,6 @@ condition = st.sidebar.selectbox(
     "Select the visualization",
     ("Introduction", "EDA", "Feature Selection", "Model Prediction")
 )
-
-uploaded_file = st.sidebar.file_uploader("Upload Dataset",type=["csv","xlsx","xls"])
-
-if uploaded_file is not None:
-    raw_data = pd.read_csv(uploaded_file)
-    #st.write(raw_data)
     
 # ------------- Introduction ------------------------
 
