@@ -262,11 +262,11 @@ if condition == 'Introduction':
 
 elif condition == 'EDA':
     data = raw_df.copy()
-    with st.beta_container():
-        st.header('Descriptive Statistics\n')
-        col1, col2 = st.beta_columns([1, 3])
-        col1.dataframe(eda.summary_table(data))
-        col2.dataframe(data.describe())
+    
+    st.header('Descriptive Statistics\n')
+    col1, col2 = st.beta_columns([1, 3])
+    col1.dataframe(eda.summary_table(data))
+    col2.dataframe(data.describe())
 
     st.header('Data Visualization')
 
