@@ -482,6 +482,8 @@ elif condition == 'Model Prediction':
     
     df = processed_data.copy()
     y = annotation_data.copy()
+    st.write(df.head())
+    st.write(y)
     X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.33, random_state=0)
 
     xgb2 = XGBClassifier(
