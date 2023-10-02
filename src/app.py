@@ -167,7 +167,7 @@ def split(dataframe):
 
     return x, y, x_train, x_test, y_train, y_test
 
-raw_df = get_raw_data()
+
 clean_df = get_cleaned_data()
 raw_eval_df = get_raw_eval_df()
 #eval_df = load_models_df(raw_eval_df)
@@ -307,10 +307,11 @@ elif condition == 'EDA':
 # -------------------------------------------
 
 elif condition == 'Feature Selection':
+    raw_df = get_raw_data()
     character_columns = raw_df.select_dtypes(include=['object']).columns
 
     # Create a select box for character columns
-    selected_column = st.selectbox('Select the class variable column:', character_columns)
+    selected_column = st.sidebar.selectbox('Select the class variable column:', character_columns)
 
     X_combin,y = preprocess_data(raw_df, selected_column)
     X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
