@@ -176,7 +176,7 @@ x, y, x_train, x_test, y_train, y_test = split(clean_df)
 processed_data = get_processed_data()
 annotation_data =  get_annotation_data()
 
-def preprocess_data(df, id_column, char_col, class_column,class_of_interest,control_class):
+def preprocess_data(df, id_column, char_col,class_of_interest,control_class):
     #df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
     #df = df[not df[char_col] in ["B_V1","A_V1"]]
     df = df[df[char_col].isin([class_of_interest,control_class])]
