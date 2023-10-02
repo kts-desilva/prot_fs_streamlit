@@ -175,21 +175,16 @@ x, y, x_train, x_test, y_train, y_test = split(clean_df)
 processed_data = get_processed_data()
 annotation_data =  get_annotation_data()
 
-character_columns = raw_df.select_dtypes(include=['object']).columns
-
-# Create a select box for character columns
-selected_column = st.selectbox('Select the class variable column:', character_columns)
-
-def preprocess_data(df):
+def preprocess_data(df, char_col):
     #df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
-    #df = df[not df.Condition in ["B_V1","A_V1"]]
-    df = df[df["Condition"].isin(["B_V1","A_V1"])]
+    #df = df[not df[char_col] in ["B_V1","A_V1"]]
+    df = df[df[char_col].isin(["B_V1","A_V1"])]
     
-    df["Binary_Class"] = np.select([df["Condition"] == "B_V1",df["Condition"] == "A_V1"],[ 0, 1])
+    df["Binary_Class"] = np.select([df[char_col] == "B_V1",df[char_col] == "A_V1"],[ 0, 1])
     df.fillna(0, inplace=True)
     
     #unwanted_columns = ['Patient_ID','Sample_Tumor_Normal','Binary_Class' ]
-    unwanted_columns = ['Patient_ID','Condition','Binary_Class' ]
+    unwanted_columns = ['Patient_ID',char_col,'Binary_Class' ]
 
     # data splitting
     X_combin = df.drop(unwanted_columns, axis=1)
@@ -312,7 +307,12 @@ elif condition == 'EDA':
 # -------------------------------------------
 
 elif condition == 'Feature Selection':
-    X_combin,y = preprocess_data(raw_df)
+    character_columns = raw_df.select_dtypes(include=['object']).columns
+
+    # Create a select box for character columns
+    selected_column = st.selectbox('Select the class variable column:', character_columns)
+
+    X_combin,y = preprocess_data(raw_df, selected_column)
     X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
     height, width, margin = 450, 1500, 25
     
