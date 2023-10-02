@@ -263,7 +263,7 @@ if condition == 'Introduction':
 # ------------- EDA ------------------------
 
 elif condition == 'EDA':
-    data = raw_df.copy()
+    data = get_raw_data()
     with st.container():
         st.header('Descriptive Statistics\n')
         col1, col2 = st.columns([1, 3])
