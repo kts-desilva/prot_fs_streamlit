@@ -176,12 +176,12 @@ x, y, x_train, x_test, y_train, y_test = split(clean_df)
 processed_data = get_processed_data()
 annotation_data =  get_annotation_data()
 
-def preprocess_data(df, id_column, char_col):
+def preprocess_data(df, id_column, char_col, class_column,class_of_interest,control_class):
     #df["Binary_Class"] = np.select([df["Sample_Tumor_Normal"] == "Tumor",df["Sample_Tumor_Normal"] == "Normal"],[ 1, 0])
     #df = df[not df[char_col] in ["B_V1","A_V1"]]
-    df = df[df[char_col].isin(["B_V1","A_V1"])]
+    df = df[df[char_col].isin([class_of_interest,control_class])]
     
-    df["Binary_Class"] = np.select([df[char_col] == "B_V1",df[char_col] == "A_V1"],[ 0, 1])
+    df["Binary_Class"] = np.select([df[char_col] == control_class,df[char_col] == class_of_interest],[ 0, 1])
     df.fillna(0, inplace=True)
     
     #unwanted_columns = ['Patient_ID','Sample_Tumor_Normal','Binary_Class' ]
@@ -314,8 +314,10 @@ elif condition == 'Feature Selection':
     # Create a select box for character columns
     id_column = st.sidebar.selectbox('Select the id variable column:', character_columns)
     class_column = st.sidebar.selectbox('Select the class variable column:', character_columns)
+    class_of_interest = st.sidebar.selectbox('Select class of interest:', raw_df[class_column].unique().tolist())
+    control_class = st.sidebar.selectbox('Select control class:', raw_df[class_column].unique().tolist())
 
-    X_combin,y = preprocess_data(raw_df, id_column, class_column)
+    X_combin,y = preprocess_data(raw_df, id_column, class_column,class_of_interest,control_class)
     X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
     height, width, margin = 450, 1500, 25
     
