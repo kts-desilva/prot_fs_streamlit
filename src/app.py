@@ -74,7 +74,7 @@ def get_raw_data():
     #raw_df = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'ovarian_clinical_data2.csv'))
     
     uploaded_file = st.sidebar.file_uploader("Upload Dataset",type=["csv","xlsx","xls"])
-    raw_df = null
+    raw_df = None 
 
     if uploaded_file is not None:
         raw_df = pd.read_csv(uploaded_file)
