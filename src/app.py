@@ -172,7 +172,7 @@ def preprocess_data(df):
     #df = df[not df.Condition in ["B_V1","A_V1"]]
     df = df[df["Condition"].isin(["B_V1","A_V1"])]
     
-    df["Binary_Class"] = np.select([df["Condition"] == "B_V1",df["Condition"] == "A_V1"],[ 1, 0])
+    df["Binary_Class"] = np.select([df["Condition"] == "B_V1",df["Condition"] == "A_V1"],[ 0, 1])
     df.fillna(0, inplace=True)
     
     #unwanted_columns = ['Patient_ID','Sample_Tumor_Normal','Binary_Class' ]
