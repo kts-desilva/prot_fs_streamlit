@@ -101,7 +101,7 @@ def get_annotation_data():
     """
 
     #annotation_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'annotation_data.csv'))
-    annotation_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'annotation_data2.csv'))
+    annotation_data = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'data_annotation2.csv'))
     return annotation_data
 
 #@st.cache
