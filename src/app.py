@@ -252,8 +252,8 @@ if condition == 'Introduction':
     - Support Vector Machine
     - Stochastic Gradient Descent
     
-    Our main accuracy metric is RMSE. To enhance our model definition, we utilized Cross Validation and Random Search for hyperparameter tuning.
-    Further, we have considered using precision, recall and specificity metrics to access the quality of the developed methodlogy.
+    Our main accuracy metric is RMSE. To enhance our model definition, we utilized cross-validation and Random Search for hyperparameter tuning.
+    Further, we have considered using precision, recall and specificity metrics to assess the quality of the developed methodology.
     """)
     
     st.image(os.path.join(os.path.abspath(''), 'data', 'ovarian-Methodology.png'))
@@ -262,11 +262,11 @@ if condition == 'Introduction':
 
 elif condition == 'EDA':
     data = raw_df.copy()
-    
-    st.header('Descriptive Statistics\n')
-    col1, col2 = st.beta_columns([1, 3])
-    col1.dataframe(eda.summary_table(data))
-    col2.dataframe(data.describe())
+    with st.container():
+        st.header('Descriptive Statistics\n')
+        col1, col2 = st.columns([1, 3])
+        col1.dataframe(eda.summary_table(data))
+        col2.dataframe(data.describe())
 
     st.header('Data Visualization')
 
