@@ -343,7 +343,7 @@ elif condition == 'Feature Selection':
         # Display a message when the button is clicked
         st.write("Button Clicked!")
 
-        X_combin,y = preprocess_data(raw_df, id_column, char_col, class_of_interest ,control_class)
+        X_combin,y = preprocess_data(raw_df, id_column, class_column, class_of_interest ,control_class)
         st.write("Dataframes..............")
         st.write(X_combin.head())
         st.write(y)
