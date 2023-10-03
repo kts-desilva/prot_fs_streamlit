@@ -349,8 +349,11 @@ elif condition == 'Feature Selection':
         'Select SFS Algorithms',
         ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
         default=['Stochastic Gradient Descent Classifier','XGBoost'])
-    
 
+        sfs_proteins = st.sidebar.radio("Select SFS Input Data :", ["Overlapping Protein Set from RFE", "Customized list", "All Proteins"],"Overlapping Protein Set from RFE")
+        sfs_direction = st.sidebar.radio("SFS Direction:", ["Forward", "Backward"], "Backward")
+        sfs_num_proteins = st.number_input("SFS Number of Proteins:", min_value=1, step=1, value=4)
+        
     if st.sidebar.button("Start Processing"):
         X_combin,y = preprocess_data(raw_df, id_column, class_column, class_of_interest ,control_class)
         X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
@@ -364,18 +367,17 @@ elif condition == 'Feature Selection':
         if(rfe):
             st.subheader('Recursive Feature Elimination (RFE)')
             # SGDClassifier
-            if("Stochastic Gradient Descent Classifier" in rfe_options):
-                st.subheader('Recursive Feature Elimination with SGDClassifier')
-                
-                new_df = X_combin
-                visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
-                visualizer.fit(new_df, y)        # Fit the data to the visualizer
-                #visualizer.show()
-                st_yellowbrick(visualizer)  
-                new_df2_sdg = new_df.loc[:, visualizer.support_]
-                st.text("SGDClassifier Features: ")
-                #st.text(new_df2_sdg.columns)
-                st.text(', '.join(new_df2_sdg.columns))
+            # if("Stochastic Gradient Descent Classifier" in rfe_options):
+            st.subheader('Recursive Feature Elimination with SGDClassifier')
+            new_df = X_combin
+            visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
+            visualizer.fit(new_df, y)        # Fit the data to the visualizer
+            #visualizer.show()
+            st_yellowbrick(visualizer)  
+            new_df2_sdg = new_df.loc[:, visualizer.support_]
+            st.text("SGDClassifier Features: ")
+            #st.text(new_df2_sdg.columns)
+            st.text(', '.join(new_df2_sdg.columns))
     
             #rf-taking too much time
             if("Random Forest" in rfe_options):
@@ -450,17 +452,15 @@ elif condition == 'Feature Selection':
             venn3(df_list, name_list)
             st.pyplot(fig)
         
-        if(sfs):
-            # options = st.sidebar.multiselect(
-            # 'Select SFS Algorithms',
-            # ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
-            # default=['Stochastic Gradient Descent Classifier','XGBoost'])
-    
+        if(sfs):    
             st.subheader('Sequential Feature Selector: SGDClassifier')
             #Selecting the Best important features according to Logistic Regression
             # new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
             #                'SORBS1','NID1']] 
             new_df3 = X_combin[['K7ES00_H3.3B', 'U3KQK0_H2BC15', 'A0A0C4DH24_IGKV6.21', 'P01814_IGHV2.70', 'A0A0B4J1X5_IGHV3.74']] 
+
+            if("XGBoost" in rfe_options):
+
             cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
             sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
             sfs_selector.fit(new_df3, y)
