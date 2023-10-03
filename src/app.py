@@ -350,8 +350,8 @@ elif condition == 'Feature Selection':
         ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
         default=['Stochastic Gradient Descent Classifier','XGBoost'])
 
-        sfs_proteins = st.sidebar.radio("Select SFS Input Data :", ["Overlapping Protein Set from RFE", "Customized list", "All Proteins"],"Overlapping Protein Set from RFE")
-        sfs_direction = st.sidebar.radio("SFS Direction:", ["Forward", "Backward"], "Backward")
+        sfs_proteins = st.sidebar.radio("Select SFS Input Data :", ["Overlapping Protein Set from RFE", "Customized list", "All Proteins"],0)
+        sfs_direction = st.sidebar.radio("SFS Direction:", ["Forward", "Backward"], 0)
         sfs_num_proteins = st.number_input("SFS Number of Proteins:", min_value=1, step=1, value=4)
         
     if st.sidebar.button("Start Processing"):
