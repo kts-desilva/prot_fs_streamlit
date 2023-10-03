@@ -458,35 +458,35 @@ elif condition == 'Feature Selection':
             # new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
             #                'SORBS1','NID1']] 
             new_df3 = X_combin[['K7ES00_H3.3B', 'U3KQK0_H2BC15', 'A0A0C4DH24_IGKV6.21', 'P01814_IGHV2.70', 'A0A0B4J1X5_IGHV3.74']] 
-
-            if("XGBoost" in rfe_options):
-
             cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-            sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
-            sfs_selector.fit(new_df3, y)
-            new_df4_sgd = new_df3.loc[:, sfs_selector.support_]
-            st.text("SGD Features: ")
-            st.text(', '.join(new_df4_sgd.columns))
+
+            if("Stochastic Gradient Descent Classifier" in rfe_options):
+                sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
+                sfs_selector.fit(new_df3, y)
+                new_df4_sgd = new_df3.loc[:, sfs_selector.support_]
+                st.text("SGD Features: ")
+                st.text(', '.join(new_df4_sgd.columns))
+        
+            if("XGBoost" in rfe_options):
+                xgb1 = XGBClassifier(
+                    learning_rate =0.2,
+                    n_estimators=1000,
+                    max_depth=5,
+                    min_child_weight=1,
+                    gamma=0,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    objective= 'binary:logistic',
+                    nthread=4,
+                    scale_pos_weight=1,
+                    seed=27)
     
-            xgb1 = XGBClassifier(
-                learning_rate =0.2,
-                n_estimators=1000,
-                max_depth=5,
-                min_child_weight=1,
-                gamma=0,
-                subsample=0.8,
-                colsample_bytree=0.8,
-                objective= 'binary:logistic',
-                nthread=4,
-                scale_pos_weight=1,
-                seed=27)
-    
-            sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = 4, cv =cv, direction ='forward')
-            sfs_selector.fit(new_df3, y)
-            new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
-            st.text("XGB Features: ")
-            #st.text(new_df4_xgb.columns)
-            st.text(', '.join(new_df4_xgb.columns))
+                sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = 4, cv =cv, direction ='forward')
+                sfs_selector.fit(new_df3, y)
+                new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
+                st.text("XGB Features: ")
+                #st.text(new_df4_xgb.columns)
+                st.text(', '.join(new_df4_xgb.columns))
     
             set3 = set(new_df4_sgd.columns)
             set4 = set(new_df4_xgb.columns)
