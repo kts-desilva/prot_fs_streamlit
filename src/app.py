@@ -317,7 +317,7 @@ elif condition == 'Feature Selection':
     class_of_interest = st.sidebar.selectbox('Select class of interest:', raw_df[class_column].unique().tolist())
     control_class = st.sidebar.selectbox('Select control class:', raw_df[class_column].unique().tolist())
 
-    X_combin,y = preprocess_data(raw_df, id_column="Patient_ID", class_column="Condition",class_of_interest="B_V1",control_class="A_V1")
+    X_combin,y = preprocess_data(raw_df, id_column="Patient_ID", char_col="Condition",class_of_interest="B_V1",control_class="A_V1")
     st.write("Dataframes..............")
     st.write(X_combin.head())
     st.write(y)
