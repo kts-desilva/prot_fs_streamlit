@@ -312,17 +312,10 @@ elif condition == 'Feature Selection':
     character_columns = raw_df.select_dtypes(include=['object']).columns
 
     # Create a select box for character columns
-    id_column = st.sidebar.selectbox('Select the id variable column:', character_columns)
-    class_column = st.sidebar.selectbox('Select the class variable column:', character_columns)
-    class_of_interest = st.sidebar.selectbox('Select class of interest:', raw_df[class_column].unique().tolist())
-    control_class = st.sidebar.selectbox('Select control class:', raw_df[class_column].unique().tolist())
-
-    X_combin,y = preprocess_data(raw_df, id_column="Patient_ID", char_col="Condition",class_of_interest="B_V1",control_class="A_V1")
-    st.write("Dataframes..............")
-    st.write(X_combin.head())
-    st.write(y)
-    X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
-    height, width, margin = 450, 1500, 25
+    id_column = st.sidebar.selectbox('Select the id variable column:', character_columns, index=0)
+    class_column = st.sidebar.selectbox('Select the class variable column:', character_columns,index=1)
+    class_of_interest = st.sidebar.selectbox('Select class of interest:', raw_df[class_column].unique().tolist(),index=0)
+    control_class = st.sidebar.selectbox('Select control class:', raw_df[class_column].unique().tolist(),index=1)
     
 #     st.subheader('Intial Inspection with XGBoost Classifier')
     
@@ -349,6 +342,13 @@ elif condition == 'Feature Selection':
     if st.sidebar.button("Click Me"):
         # Display a message when the button is clicked
         st.write("Button Clicked!")
+
+        X_combin,y = preprocess_data(raw_df, id_column, char_col, class_of_interest ,control_class)
+        st.write("Dataframes..............")
+        st.write(X_combin.head())
+        st.write(y)
+        X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
+        height, width, margin = 450, 1500, 25
     
         if(rfe):
             st.subheader('Recursive Feature Elimination (RFE)')
