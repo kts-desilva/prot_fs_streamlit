@@ -352,7 +352,7 @@ elif condition == 'Feature Selection':
 
         sfs_proteins = st.sidebar.radio("Select SFS Input Data :", ["Overlapping Protein Set from RFE", "Customized list", "All Proteins"],0)
         sfs_direction = st.sidebar.radio("SFS Direction:", ["Forward", "Backward"], 0)
-        sfs_num_proteins = st.number_input("SFS Number of Proteins:", min_value=1, step=1, value=4)
+        sfs_num_proteins = st.sidebar.number_input("SFS Number of Proteins:", min_value=1, step=1, value=4)
         
     if st.sidebar.button("Start Processing"):
         X_combin,y = preprocess_data(raw_df, id_column, class_column, class_of_interest ,control_class)
