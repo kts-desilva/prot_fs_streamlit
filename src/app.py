@@ -339,101 +339,122 @@ elif condition == 'Feature Selection':
     
     ecv = st.sidebar.checkbox('Enable cross validation', value=True)
 
+    if(rfe):
+        rfe_options = st.sidebar.multiselect(
+        'Select RFE Algorithms',
+        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier', 'XGBoost'],
+        default  = ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier'])
+    if(sfs):
+        sfs_options = st.sidebar.multiselect(
+        'Select SFS Algorithms',
+        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
+        default=['Stochastic Gradient Descent Classifier','XGBoost'])
+    
+
     if st.sidebar.button("Start Processing"):
         X_combin,y = preprocess_data(raw_df, id_column, class_column, class_of_interest ,control_class)
         X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
         height, width, margin = 450, 1500, 25
+
+        new_df2_sdg = None
+        new_df2_svm = None
+        new_df2_rf = None
+        new_df2_xgb = None
     
         if(rfe):
             st.subheader('Recursive Feature Elimination (RFE)')
-            options = st.sidebar.multiselect(
-            'Select RFE Algorithms',
-            ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier', 'XGBoost'],
-            default  = ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier'])
-    
-            st.subheader('Recursive Feature Elimination with SGDClassifier')
             # SGDClassifier
-            prots = []
-            with open(os.path.join(os.path.abspath(''), 'data', 'diff_exp_proteins.txt')) as f:
-                prots = f.read().splitlines()
-            #new_df = X_combin[prots]
-            new_df = X_combin
-        #     new_df = X_combin[['SYNM','LAMB2','ITGA7','TNS1',
-        #                    'HSPB6','DMD','OGN','PGM5','CAVIN2','SOD3',
-        #                    'SORBS1','NID1','SORBS1','ABCA8','TNS2','CD34']]
-            visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
-            visualizer.fit(new_df, y)        # Fit the data to the visualizer
-            #visualizer.show()
-            st_yellowbrick(visualizer)  
-            new_df2_sdg = new_df.loc[:, visualizer.support_]
-            st.text("SGDClassifier Features: ")
-            #st.text(new_df2_sdg.columns)
-            st.text(', '.join(new_df2_sdg.columns))
+            if("Stochastic Gradient Descent Classifier" in rfe_options):
+                st.subheader('Recursive Feature Elimination with SGDClassifier')
+                
+                new_df = X_combin
+                visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
+                visualizer.fit(new_df, y)        # Fit the data to the visualizer
+                #visualizer.show()
+                st_yellowbrick(visualizer)  
+                new_df2_sdg = new_df.loc[:, visualizer.support_]
+                st.text("SGDClassifier Features: ")
+                #st.text(new_df2_sdg.columns)
+                st.text(', '.join(new_df2_sdg.columns))
     
             #rf-taking too much time
-            st.subheader('Recursive Feature Elimination with Random Forest')
-            cv_rf = StratifiedKFold(3)
-            visualizer_rf = RFECV(RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100), cv=cv_rf, scoring='f1_weighted')
-            visualizer_rf.fit(new_df, y)
-            #visualizer_rf.show()
-            st_yellowbrick(visualizer_rf) 
-            new_df2_rf = new_df.loc[:, visualizer_rf.support_]
-            print("Features: ", new_df2_rf.columns)
-            #find_if_correct_features_found(new_df2.columns)
-            st.text("Random Forest Features: ")
-            #st.text(new_df2_rf.columns)
-            st.text(', '.join(new_df2_rf.columns))
+            if("Random Forest" in rfe_options):
+                st.subheader('Recursive Feature Elimination with Random Forest')
+                cv_rf = StratifiedKFold(3)
+                visualizer_rf = RFECV(RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100), cv=cv_rf, scoring='f1_weighted')
+                visualizer_rf.fit(new_df, y)
+                #visualizer_rf.show()
+                st_yellowbrick(visualizer_rf) 
+                new_df2_rf = new_df.loc[:, visualizer_rf.support_]
+                print("Features: ", new_df2_rf.columns)
+                #find_if_correct_features_found(new_df2.columns)
+                st.text("Random Forest Features: ")
+                #st.text(new_df2_rf.columns)
+                st.text(', '.join(new_df2_rf.columns))
     
             #svm
-            st.subheader('Recursive Feature Elimination with Support Vector Machine')
-            visualizer = RFECV(SVC(kernel='linear', C=1))
-            visualizer.fit(new_df, y)
-            #visualizer.show()
-            st_yellowbrick(visualizer) 
-            new_df2_svm = new_df.loc[:, visualizer.support_]
-            print("Features: ", new_df2_svm.columns)
-            #find_if_correct_features_found(new_df2.columns)
-            st.text("Support Vector Machine Features: ")
-            #st.text(new_df2_svm.columns)
-            st.text(', '.join(new_df2_svm.columns))
+            if("Random Forest" in rfe_options):
+                st.subheader('Recursive Feature Elimination with Support Vector Machine')
+                visualizer = RFECV(SVC(kernel='linear', C=1))
+                visualizer.fit(new_df, y)
+                #visualizer.show()
+                st_yellowbrick(visualizer) 
+                new_df2_svm = new_df.loc[:, visualizer.support_]
+                print("Features: ", new_df2_svm.columns)
+                #find_if_correct_features_found(new_df2.columns)
+                st.text("Support Vector Machine Features: ")
+                #st.text(new_df2_svm.columns)
+                st.text(', '.join(new_df2_svm.columns))
     
-            #xgb
-        #     xgb1 = XGBClassifier(
-        #         learning_rate =0.2,
-        #         n_estimators=1000,
-        #         max_depth=5,
-        #         min_child_weight=1,
-        #         gamma=0,
-        #         subsample=0.8,
-        #         colsample_bytree=0.8,
-        #         objective= 'binary:logistic',
-        #         nthread=4,
-        #         scale_pos_weight=1,
-        #         seed=27)
-        #     visualizer = RFECV(xgb1)
-        #     visualizer.fit(new_df, y)
-        #     #visualizer.show() 
-        #     st_yellowbrick(visualizer) 
-        #     new_df2_xgb = new_df.loc[:, visualizer.support_]
-        #     print("Features: ", new_df2.columns)
-        #     st.text("XGBoost Features: "+ new_df2_xgb.columns)
+            #xgb 
+            if("XGBoost" in rfe_options):
+                xgb1 = XGBClassifier(
+                    learning_rate =0.2,
+                    n_estimators=1000,
+                    max_depth=5,
+                    min_child_weight=1,
+                    gamma=0,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    objective= 'binary:logistic',
+                    nthread=4,
+                    scale_pos_weight=1,
+                    seed=27)
+                visualizer = RFECV(xgb1)
+                visualizer.fit(new_df, y)
+                #visualizer.show() 
+                st_yellowbrick(visualizer) 
+                new_df2_xgb = new_df.loc[:, visualizer.support_]
+                print("Features: ", new_df2_xgb.columns)
+                st.text("XGBoost Features: ")
+                st.text(', '.join(new_df2_xgb.columns))
     
-            set1 = set(new_df2_sdg.columns)
-            set2 = set(new_df2_svm.columns)
-            set3 = set(new_df2_rf.columns)
+            # set1 = set(new_df2_sdg.columns)
+            # set2 = set(new_df2_svm.columns)
+            # set3 = set(new_df2_rf.columns)
     
-            print(set1)
-            print(set2)
-            print(set3)
+            # print(set1)
+            # print(set2)
+            # print(set3)
+            # fig, ax = plt.subplots(figsize=(5, 5))
+            # venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
+
+            df_list = []
+            name_list = [] 
+            for df, name in zip([new_df2_sdg,new_df2_svm,new_df2_rf,new_df2_xgb], ['SGD', 'SVM', 'RF', 'XGB']):
+                if(df != None):
+                    df = df_list.append(set(df.columns))
+                    name_list = name_list.append(name)
+
             fig, ax = plt.subplots(figsize=(5, 5))
-            venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
+            venn3(df_list, name_list)
             st.pyplot(fig)
         
         if(sfs):
-            options = st.sidebar.multiselect(
-            'Select SFS Algorithms',
-            ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
-            default=['Stochastic Gradient Descent Classifier','XGBoost'])
+            # options = st.sidebar.multiselect(
+            # 'Select SFS Algorithms',
+            # ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
+            # default=['Stochastic Gradient Descent Classifier','XGBoost'])
     
             st.subheader('Sequential Feature Selector: SGDClassifier')
             #Selecting the Best important features according to Logistic Regression
