@@ -344,141 +344,145 @@ elif condition == 'Feature Selection':
     sfs = st.sidebar.checkbox('Sequential Feature Selection', value=True)
     
     ecv = st.sidebar.checkbox('Enable cross validation', value=True)
+
+    if st.sidebar.button("Click Me"):
+        # Display a message when the button is clicked
+        st.write("Button Clicked!")
     
-    if(rfe):
-        st.subheader('Recursive Feature Elimination (RFE)')
-        options = st.sidebar.multiselect(
-        'Select RFE Algorithms',
-        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier', 'XGBoost'],
-        default  = ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier'])
-
-        st.subheader('Recursive Feature Elimination with SGDClassifier')
-        # SGDClassifier
-        prots = []
-        with open(os.path.join(os.path.abspath(''), 'data', 'diff_exp_proteins.txt')) as f:
-            prots = f.read().splitlines()
-        #new_df = X_combin[prots]
-        new_df = X_combin
-    #     new_df = X_combin[['SYNM','LAMB2','ITGA7','TNS1',
-    #                    'HSPB6','DMD','OGN','PGM5','CAVIN2','SOD3',
-    #                    'SORBS1','NID1','SORBS1','ABCA8','TNS2','CD34']]
-        visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
-        visualizer.fit(new_df, y)        # Fit the data to the visualizer
-        #visualizer.show()
-        st_yellowbrick(visualizer)  
-        new_df2_sdg = new_df.loc[:, visualizer.support_]
-        st.text("SGDClassifier Features: ")
-        #st.text(new_df2_sdg.columns)
-        st.text(', '.join(new_df2_sdg.columns))
-
-        #rf-taking too much time
-        st.subheader('Recursive Feature Elimination with Random Forest')
-        cv_rf = StratifiedKFold(3)
-        visualizer_rf = RFECV(RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100), cv=cv_rf, scoring='f1_weighted')
-        visualizer_rf.fit(new_df, y)
-        #visualizer_rf.show()
-        st_yellowbrick(visualizer_rf) 
-        new_df2_rf = new_df.loc[:, visualizer_rf.support_]
-        print("Features: ", new_df2_rf.columns)
-        #find_if_correct_features_found(new_df2.columns)
-        st.text("Random Forest Features: ")
-        #st.text(new_df2_rf.columns)
-        st.text(', '.join(new_df2_rf.columns))
-
-        #svm
-        st.subheader('Recursive Feature Elimination with Support Vector Machine')
-        visualizer = RFECV(SVC(kernel='linear', C=1))
-        visualizer.fit(new_df, y)
-        #visualizer.show()
-        st_yellowbrick(visualizer) 
-        new_df2_svm = new_df.loc[:, visualizer.support_]
-        print("Features: ", new_df2_svm.columns)
-        #find_if_correct_features_found(new_df2.columns)
-        st.text("Support Vector Machine Features: ")
-        #st.text(new_df2_svm.columns)
-        st.text(', '.join(new_df2_svm.columns))
-
-        #xgb
-    #     xgb1 = XGBClassifier(
-    #         learning_rate =0.2,
-    #         n_estimators=1000,
-    #         max_depth=5,
-    #         min_child_weight=1,
-    #         gamma=0,
-    #         subsample=0.8,
-    #         colsample_bytree=0.8,
-    #         objective= 'binary:logistic',
-    #         nthread=4,
-    #         scale_pos_weight=1,
-    #         seed=27)
-    #     visualizer = RFECV(xgb1)
-    #     visualizer.fit(new_df, y)
-    #     #visualizer.show() 
-    #     st_yellowbrick(visualizer) 
-    #     new_df2_xgb = new_df.loc[:, visualizer.support_]
-    #     print("Features: ", new_df2.columns)
-    #     st.text("XGBoost Features: "+ new_df2_xgb.columns)
-
-        set1 = set(new_df2_sdg.columns)
-        set2 = set(new_df2_svm.columns)
-        set3 = set(new_df2_rf.columns)
-
-        print(set1)
-        print(set2)
-        print(set3)
-        fig, ax = plt.subplots(figsize=(5, 5))
-        venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
-        st.pyplot(fig)
+        if(rfe):
+            st.subheader('Recursive Feature Elimination (RFE)')
+            options = st.sidebar.multiselect(
+            'Select RFE Algorithms',
+            ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier', 'XGBoost'],
+            default  = ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier'])
     
-    if(sfs):
-        options = st.sidebar.multiselect(
-        'Select SFS Algorithms',
-        ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
-        default=['Stochastic Gradient Descent Classifier','XGBoost'])
-
-        st.subheader('Sequential Feature Selector: SGDClassifier')
-        #Selecting the Best important features according to Logistic Regression
-        # new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
-        #                'SORBS1','NID1']] 
-        new_df3 = X_combin[['K7ES00_H3.3B', 'U3KQK0_H2BC15', 'A0A0C4DH24_IGKV6.21', 'P01814_IGHV2.70', 'A0A0B4J1X5_IGHV3.74']] 
-        cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-        sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
-        sfs_selector.fit(new_df3, y)
-        new_df4_sgd = new_df3.loc[:, sfs_selector.support_]
-        st.text("SGD Features: ")
-        st.text(', '.join(new_df4_sgd.columns))
-
-        xgb1 = XGBClassifier(
-            learning_rate =0.2,
-            n_estimators=1000,
-            max_depth=5,
-            min_child_weight=1,
-            gamma=0,
-            subsample=0.8,
-            colsample_bytree=0.8,
-            objective= 'binary:logistic',
-            nthread=4,
-            scale_pos_weight=1,
-            seed=27)
-
-        sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = 4, cv =cv, direction ='forward')
-        sfs_selector.fit(new_df3, y)
-        new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
-        st.text("XGB Features: ")
-        #st.text(new_df4_xgb.columns)
-        st.text(', '.join(new_df4_xgb.columns))
-
-        set3 = set(new_df4_sgd.columns)
-        set4 = set(new_df4_xgb.columns)
-
-        print(set3)
-        print(set4)
-        fig, ax = plt.subplots(figsize=(5, 5))
-        venn2([set3, set4], ('SGD', 'XGB'))
-        st.pyplot(fig)
+            st.subheader('Recursive Feature Elimination with SGDClassifier')
+            # SGDClassifier
+            prots = []
+            with open(os.path.join(os.path.abspath(''), 'data', 'diff_exp_proteins.txt')) as f:
+                prots = f.read().splitlines()
+            #new_df = X_combin[prots]
+            new_df = X_combin
+        #     new_df = X_combin[['SYNM','LAMB2','ITGA7','TNS1',
+        #                    'HSPB6','DMD','OGN','PGM5','CAVIN2','SOD3',
+        #                    'SORBS1','NID1','SORBS1','ABCA8','TNS2','CD34']]
+            visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
+            visualizer.fit(new_df, y)        # Fit the data to the visualizer
+            #visualizer.show()
+            st_yellowbrick(visualizer)  
+            new_df2_sdg = new_df.loc[:, visualizer.support_]
+            st.text("SGDClassifier Features: ")
+            #st.text(new_df2_sdg.columns)
+            st.text(', '.join(new_df2_sdg.columns))
     
-    #new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']]
-    new_df4 = X_combin[[set.intersection(set3,set4)]]
+            #rf-taking too much time
+            st.subheader('Recursive Feature Elimination with Random Forest')
+            cv_rf = StratifiedKFold(3)
+            visualizer_rf = RFECV(RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100), cv=cv_rf, scoring='f1_weighted')
+            visualizer_rf.fit(new_df, y)
+            #visualizer_rf.show()
+            st_yellowbrick(visualizer_rf) 
+            new_df2_rf = new_df.loc[:, visualizer_rf.support_]
+            print("Features: ", new_df2_rf.columns)
+            #find_if_correct_features_found(new_df2.columns)
+            st.text("Random Forest Features: ")
+            #st.text(new_df2_rf.columns)
+            st.text(', '.join(new_df2_rf.columns))
+    
+            #svm
+            st.subheader('Recursive Feature Elimination with Support Vector Machine')
+            visualizer = RFECV(SVC(kernel='linear', C=1))
+            visualizer.fit(new_df, y)
+            #visualizer.show()
+            st_yellowbrick(visualizer) 
+            new_df2_svm = new_df.loc[:, visualizer.support_]
+            print("Features: ", new_df2_svm.columns)
+            #find_if_correct_features_found(new_df2.columns)
+            st.text("Support Vector Machine Features: ")
+            #st.text(new_df2_svm.columns)
+            st.text(', '.join(new_df2_svm.columns))
+    
+            #xgb
+        #     xgb1 = XGBClassifier(
+        #         learning_rate =0.2,
+        #         n_estimators=1000,
+        #         max_depth=5,
+        #         min_child_weight=1,
+        #         gamma=0,
+        #         subsample=0.8,
+        #         colsample_bytree=0.8,
+        #         objective= 'binary:logistic',
+        #         nthread=4,
+        #         scale_pos_weight=1,
+        #         seed=27)
+        #     visualizer = RFECV(xgb1)
+        #     visualizer.fit(new_df, y)
+        #     #visualizer.show() 
+        #     st_yellowbrick(visualizer) 
+        #     new_df2_xgb = new_df.loc[:, visualizer.support_]
+        #     print("Features: ", new_df2.columns)
+        #     st.text("XGBoost Features: "+ new_df2_xgb.columns)
+    
+            set1 = set(new_df2_sdg.columns)
+            set2 = set(new_df2_svm.columns)
+            set3 = set(new_df2_rf.columns)
+    
+            print(set1)
+            print(set2)
+            print(set3)
+            fig, ax = plt.subplots(figsize=(5, 5))
+            venn3([set1, set2, set3], ('SGD', 'SVM', 'RF'))
+            st.pyplot(fig)
+        
+        if(sfs):
+            options = st.sidebar.multiselect(
+            'Select SFS Algorithms',
+            ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
+            default=['Stochastic Gradient Descent Classifier','XGBoost'])
+    
+            st.subheader('Sequential Feature Selector: SGDClassifier')
+            #Selecting the Best important features according to Logistic Regression
+            # new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
+            #                'SORBS1','NID1']] 
+            new_df3 = X_combin[['K7ES00_H3.3B', 'U3KQK0_H2BC15', 'A0A0C4DH24_IGKV6.21', 'P01814_IGHV2.70', 'A0A0B4J1X5_IGHV3.74']] 
+            cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+            sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
+            sfs_selector.fit(new_df3, y)
+            new_df4_sgd = new_df3.loc[:, sfs_selector.support_]
+            st.text("SGD Features: ")
+            st.text(', '.join(new_df4_sgd.columns))
+    
+            xgb1 = XGBClassifier(
+                learning_rate =0.2,
+                n_estimators=1000,
+                max_depth=5,
+                min_child_weight=1,
+                gamma=0,
+                subsample=0.8,
+                colsample_bytree=0.8,
+                objective= 'binary:logistic',
+                nthread=4,
+                scale_pos_weight=1,
+                seed=27)
+    
+            sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = 4, cv =cv, direction ='forward')
+            sfs_selector.fit(new_df3, y)
+            new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
+            st.text("XGB Features: ")
+            #st.text(new_df4_xgb.columns)
+            st.text(', '.join(new_df4_xgb.columns))
+    
+            set3 = set(new_df4_sgd.columns)
+            set4 = set(new_df4_xgb.columns)
+    
+            print(set3)
+            print(set4)
+            fig, ax = plt.subplots(figsize=(5, 5))
+            venn2([set3, set4], ('SGD', 'XGB'))
+            st.pyplot(fig)
+        
+        #new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']]
+        new_df4 = X_combin[[set.intersection(set3,set4)]]
 
 # -------------------------------------------
 
