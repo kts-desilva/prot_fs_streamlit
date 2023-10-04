@@ -445,7 +445,8 @@ elif condition == 'Feature Selection':
             name_list = [] 
             for df, name in zip([new_df2_sdg,new_df2_svm,new_df2_rf,new_df2_xgb], ['SGD', 'SVM', 'RF', 'XGB']):
                 if(not df.empty):
-                    df_list = df_list.append(set(df.columns))
+                    st.write(df.columns)
+                    df_list = df_list.append(df.columns)
                     name_list = name_list.append(name)
 
             fig, ax = plt.subplots(figsize=(5, 5))
