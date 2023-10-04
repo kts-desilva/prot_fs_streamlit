@@ -51,6 +51,7 @@ from sklearn import metrics
 from yellowbrick.model_selection import RFECV
 from streamlit_yellowbrick import st_yellowbrick
 from sklearn.feature_selection import SequentialFeatureSelector
+from io import BytesIO
 
 # %%
 st.set_page_config(
@@ -349,8 +350,11 @@ elif condition == 'Feature Selection':
         'Select SFS Algorithms',
         ['Random Forest', 'Support Vector Machine', 'Stochastic Gradient Descent Classifier','XGBoost'],
         default=['Stochastic Gradient Descent Classifier','XGBoost'])
-
         sfs_proteins = st.sidebar.radio("Select SFS Input Data :", ["Overlapping Protein Set from RFE", "Customized list", "All Proteins"],0)
+        sfs_cust_prot_list = None
+        if(sfs_proteins=="Customized list"):
+            sfs_cust_prot_list = st.sidebar.multiselect('Select SFS Proteins', raw_df.drop(character_columns, axis=1).columns)
+
         sfs_direction = st.sidebar.radio("SFS Direction:", ["Forward", "Backward"], 0)
         sfs_num_proteins = st.sidebar.number_input("SFS Number of Proteins:", min_value=1, step=1, value=4)
         
@@ -367,17 +371,22 @@ elif condition == 'Feature Selection':
         if(rfe):
             st.subheader('Recursive Feature Elimination (RFE)')
             # SGDClassifier
-            # if("Stochastic Gradient Descent Classifier" in rfe_options):
-            st.subheader('Recursive Feature Elimination with SGDClassifier')
-            new_df = X_combin
-            visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
-            visualizer.fit(new_df, y)        # Fit the data to the visualizer
-            #visualizer.show()
-            st_yellowbrick(visualizer)  
-            new_df2_sdg = new_df.loc[:, visualizer.support_]
-            st.text("SGDClassifier Features: ")
-            #st.text(new_df2_sdg.columns)
-            st.text(', '.join(new_df2_sdg.columns))
+            if("Stochastic Gradient Descent Classifier" in rfe_options):
+                st.subheader('Recursive Feature Elimination with SGDClassifier')
+                new_df = X_combin
+                visualizer = RFECV(SGDClassifier(max_iter=1000, tol=1e-3))
+                visualizer.fit(new_df, y)        # Fit the data to the visualizer
+                #visualizer.show()
+                st_yellowbrick(visualizer)  
+                new_df2_sdg = new_df.loc[:, visualizer.support_]
+                st.text("SGDClassifier Features: ")
+                #st.text(new_df2_sdg.columns)
+                st.text(', '.join(new_df2_sdg.columns))
+                new_df2_sdg_new = new_df2_sdg.copy()
+                new_df2_sdg_new[["Condition"]] = y
+                new_df2_sdg_new[["Sample"]] = raw_df[[id_column]]
+                st.download_button("Download Selected Protein Matrix",new_df2_sdg_new.to_csv(index=False).encode('utf-8'),
+                                   "rfe_sgd_matrix.csv","text/csv")
     
             #rf-taking too much time
             if("Random Forest" in rfe_options):
@@ -393,9 +402,15 @@ elif condition == 'Feature Selection':
                 st.text("Random Forest Features: ")
                 #st.text(new_df2_rf.columns)
                 st.text(', '.join(new_df2_rf.columns))
+                new_df2_rf_new = new_df2_rf.copy()
+                new_df2_rf_new[["Condition"]] = y
+                new_df2_rf_new[["Sample"]] = raw_df[[id_column]]
+                st.download_button("Download Selected Protein Matrix",new_df2_rf_new.to_csv(index=False).encode('utf-8'),
+                                   "rfe_rf_matrix.csv","text/csv")
+                
     
             #svm
-            if("Random Forest" in rfe_options):
+            if("Support Vector Machine" in rfe_options):
                 st.subheader('Recursive Feature Elimination with Support Vector Machine')
                 visualizer = RFECV(SVC(kernel='linear', C=1))
                 visualizer.fit(new_df, y)
@@ -407,6 +422,11 @@ elif condition == 'Feature Selection':
                 st.text("Support Vector Machine Features: ")
                 #st.text(new_df2_svm.columns)
                 st.text(', '.join(new_df2_svm.columns))
+                new_df2_svm_new = new_df2_svm.copy()
+                new_df2_svm_new[["Condition"]] = y
+                new_df2_svm_new[["Sample"]] = raw_df[[id_column]]
+                st.download_button("Download Selected Protein Matrix",new_df2_svm_new.to_csv(index=False).encode('utf-8'),
+                                   "rfe_svm_matrix.csv","text/csv")
     
             #xgb 
             if("XGBoost" in rfe_options):
@@ -430,6 +450,11 @@ elif condition == 'Feature Selection':
                 print("Features: ", new_df2_xgb.columns)
                 st.text("XGBoost Features: ")
                 st.text(', '.join(new_df2_xgb.columns))
+                new_df2_xgb_new = new_df2_xgb.copy()
+                new_df2_xgb_new[["Condition"]] = y
+                new_df2_xgb_new[["Sample"]] = raw_df[[id_column]]
+                st.download_button("Download Selected Protein Matrix",new_df2_xgb_new.to_csv(index=False).encode('utf-8'),
+                                   "rfe_xgb_matrix.csv","text/csv")
     
             # set1 = set(new_df2_sdg.columns)
             # set2 = set(new_df2_svm.columns)
@@ -444,31 +469,50 @@ elif condition == 'Feature Selection':
             df_list = []
             name_list = [] 
             for df, name in zip([new_df2_sdg,new_df2_svm,new_df2_rf,new_df2_xgb], ['SGD', 'SVM', 'RF', 'XGB']):
-                if(not df.empty):
-                    st.write(df.columns)
-                    df_list = df_list.append(df.columns)
-                    name_list = name_list.append(name)
+                if(not df is None):
+                    df_list.append(set(df.columns))
+                    name_list.append(name)
 
-            fig, ax = plt.subplots(figsize=(5, 5))
-            venn3(df_list, name_list)
-            st.pyplot(fig)
+            if(len(df_list)==2):
+                fig, ax = plt.subplots(figsize=(10,10))
+                venn2(df_list, name_list)
+                buf = BytesIO()
+                fig.savefig(buf, format="png")
+                st.image(buf)
+            if(len(df_list)==3):
+                fig, ax = plt.subplots(figsize=(10,10))
+                venn3(df_list, name_list)
+                buf = BytesIO()
+                fig.savefig(buf, format="png")
+                st.image(buf)
         
+        new_df4_sgd = None
+        new_df4_xgb = None
+
         if(sfs):    
             st.subheader('Sequential Feature Selector: SGDClassifier')
-            #Selecting the Best important features according to Logistic Regression
-            # new_df3 = X_combin[['SYNM','LAMB2','ITGA7','TNS1','OGN','PGM5','CAVIN2','SOD3',
-            #                'SORBS1','NID1']] 
-            new_df3 = X_combin[['K7ES00_H3.3B', 'U3KQK0_H2BC15', 'A0A0C4DH24_IGKV6.21', 'P01814_IGHV2.70', 'A0A0B4J1X5_IGHV3.74']] 
+            if(sfs_proteins == "Overlapping Protein Set from RFE"):
+                new_df3 = X_combin[set.union(*df_list)]
+            elif sfs_proteins == "Customized list":
+                 new_df3 = X_combin[sfs_cust_prot_list] 
+            else:
+                new_df3 = X_combin
             cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
 
-            if("Stochastic Gradient Descent Classifier" in rfe_options):
-                sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), n_features_to_select = 4, cv =cv, direction ='forward')
+            if("Stochastic Gradient Descent Classifier" in sfs_options):
+                sfs_selector = SequentialFeatureSelector(estimator=SGDClassifier(max_iter=1000, tol=1e-3), 
+                                                         n_features_to_select = sfs_num_proteins, cv =cv, direction =sfs_direction.lower())
                 sfs_selector.fit(new_df3, y)
                 new_df4_sgd = new_df3.loc[:, sfs_selector.support_]
                 st.text("SGD Features: ")
                 st.text(', '.join(new_df4_sgd.columns))
+                new_df4_sgd_new = new_df4_sgd.copy()
+                new_df4_sgd_new[["Condition"]] = y
+                new_df4_sgd_new[["Sample"]] = raw_df[[id_column]]
+                st.download_button("Download Selected Protein Matrix",new_df4_sgd_new.to_csv(index=False).encode('utf-8'),
+                                   "sfs_sgd_matrix.csv","text/csv")
         
-            if("XGBoost" in rfe_options):
+            if("XGBoost" in sfs_options):
                 xgb1 = XGBClassifier(
                     learning_rate =0.2,
                     n_estimators=1000,
@@ -482,29 +526,78 @@ elif condition == 'Feature Selection':
                     scale_pos_weight=1,
                     seed=27)
     
-                sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = 4, cv =cv, direction ='forward')
+                sfs_selector = SequentialFeatureSelector(estimator=xgb1, n_features_to_select = sfs_num_proteins, cv =cv, 
+                                                         direction = sfs_direction.lower())
                 sfs_selector.fit(new_df3, y)
                 new_df4_xgb = new_df3.loc[:, sfs_selector.support_]
                 st.text("XGB Features: ")
                 #st.text(new_df4_xgb.columns)
                 st.text(', '.join(new_df4_xgb.columns))
+                new_df4_xgb_new = new_df4_xgb.copy()
+                new_df4_xgb_new[["Condition"]] = y
+                new_df4_xgb_new[["Sample"]] = raw_df[[id_column]]
+                st.download_button("Download Selected Protein Matrix",new_df4_xgb_new.to_csv(index=False).encode('utf-8'),
+                                   "sfs_xgb_matrix.csv","text/csv")
+
+            if("Support Vector Machine" in sfs_options):
+                sfs_selector = SequentialFeatureSelector(estimator=SVC(kernel='linear', C=1), n_features_to_select = sfs_num_proteins, 
+                                                         cv =cv, direction = sfs_direction.lower())
+                sfs_selector.fit(new_df3, y)
+                new_df4_svm = new_df3.loc[:, sfs_selector.support_]
+                st.text("SVM Features: ")
+                #st.text(new_df4_xgb.columns)
+                st.text(', '.join(new_df4_svm.columns))
+                new_df4_svm_new = new_df4_svm.copy()
+                new_df4_svm_new[["Condition"]] = y
+                new_df4_svm_new[["Sample"]] = raw_df[[id_column]]
+                st.download_button("Download Selected Protein Matrix",new_df4_svm_new.to_csv(index=False).encode('utf-8'),
+                                   "sfs_svm_matrix.csv","text/csv")
     
-            set3 = set(new_df4_sgd.columns)
-            set4 = set(new_df4_xgb.columns)
+            # set3 = set(new_df4_sgd.columns)
+            # set4 = set(new_df4_xgb.columns)
     
-            print(set3)
-            print(set4)
-            fig, ax = plt.subplots(figsize=(5, 5))
-            venn2([set3, set4], ('SGD', 'XGB'))
-            st.pyplot(fig)
+            # print(set3)
+            # print(set4)
+            # fig, ax = plt.subplots(figsize=(5, 5))
+            # venn2([set3, set4], ('SGD', 'XGB'))
+            # st.pyplot(fig)
+
+            df_list2 = []
+            name_list2 = [] 
+            for df, name in zip([new_df4_sgd,new_df4_xgb,new_df4_svm], ['SGD', 'XGB','SVM']):
+                if(not df is None):
+                    df_list2.append(set(df.columns))
+                    name_list2.append(name)
+
+            if(len(df_list2)==2):
+                fig2, ax2 = plt.subplots(figsize=(10,10))
+                venn2(df_list2, name_list2)
+                buf = BytesIO()
+                fig2.savefig(buf, format="png")
+                st.image(buf)
+            if(len(df_list2)==3):
+                fig2, ax2 = plt.subplots(figsize=(10,10))
+                venn3(df_list2, name_list2)
+                buf = BytesIO()
+                fig2.savefig(buf, format="png")
+                st.image(buf)
         
         #new_df4 = X_combin[['SYNM','LAMB2','OGN','SOD3']]
-        new_df4 = X_combin[[set.intersection(set3,set4)]]
+        #new_df4 = X_combin[[set.intersection(set3,set4)]]
 
 # -------------------------------------------
 
 elif condition == 'Model Prediction':
     st.subheader('Classification Models')
+
+    raw_df = get_raw_data()
+    character_columns = raw_df.select_dtypes(include=['object']).columns
+
+    # Create a select box for character columns
+    id_column = st.sidebar.selectbox('Select the id variable column:', character_columns, index=0)
+    class_column = st.sidebar.selectbox('Select the class variable column:', character_columns,index=1)
+    class_of_interest = st.sidebar.selectbox('Select class of interest:', raw_df[class_column].unique().tolist(),index=0)
+    control_class = st.sidebar.selectbox('Select control class:', raw_df[class_column].unique().tolist(),index=1)
     
     options = st.sidebar.multiselect(
         'Select Classification Algorithms',
