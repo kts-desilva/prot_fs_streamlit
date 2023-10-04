@@ -444,8 +444,7 @@ elif condition == 'Feature Selection':
             df_list = []
             name_list = [] 
             for df, name in zip([new_df2_sdg,new_df2_svm,new_df2_rf,new_df2_xgb], ['SGD', 'SVM', 'RF', 'XGB']):
-                st.write(df.head())
-                if(df != None):
+                if(not df.empty):
                     df_list = df_list.append(set(df.columns))
                     name_list = name_list.append(name)
 
