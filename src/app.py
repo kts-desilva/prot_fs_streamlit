@@ -607,52 +607,62 @@ elif condition == 'Model Prediction':
     height, width, margin = 450, 1500, 25
     
     #todo: add pre-trained model option also
-    
-    df = processed_data.copy()
-    y = annotation_data.copy()
-    st.write(df.head())
-    st.write(y)
-    X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.33, random_state=0)
 
-    xgb2 = XGBClassifier(
-     learning_rate =0.2,
-     n_estimators=1000,
-     max_depth=5,
-     min_child_weight=1,
-     gamma=0,
-     subsample=0.8,
-     colsample_bytree=0.8,
-     objective= 'binary:logistic',
-     nthread=4,
-     scale_pos_weight=1,
-     seed=27)
-    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-    scores = cross_val_score(xgb2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
-    xgb2.fit(X_train, y_train)
-    
-    y_pred_proba = xgb2.predict_proba(X_test)[::,1]
-    fpr, tpr, _ =  metrics.roc_curve(y_test,  y_pred_proba)
-    fig =  graphs.plot_roc(fpr, tpr,height, width, margin)
-    st.text("XGB ROC Curve: ")
-    st.plotly_chart(fig)
-    
-    model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
-    scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
-    model3.fit(X_train, y_train)
-    y_pred_proba_rf = model3.predict_proba(X_test)[::,1]
-    fpr_rf, tpr_rf, _ = metrics.roc_curve(y_test,  y_pred_proba_rf)
-    fig_rf =  graphs.plot_roc(fpr_rf, tpr_rf,height, width, margin)
-    st.text("Random Forest ROC Curve: ")
-    st.plotly_chart(fig_rf)
-    
-    model2 = SVC(kernel='linear', C=1,probability=True)
-    scores = cross_val_score(model2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
-    model2.fit(X_train, y_train)
-    y_pred_proba_svm = model2.predict_proba(X_test)[::,1]
-    fpr_svm, tpr_svm, _ = metrics.roc_curve(y_test,  y_pred_proba_svm)
-    fig_svm =  graphs.plot_roc(fpr_svm, tpr_svm,height, width, margin)
-    st.text("SVM ROC Curve: ")
-    st.plotly_chart(fig_svm)
+    if st.sidebar.button("Start Processing"):
+        X_combin,y = preprocess_data(raw_df, id_column, class_column, class_of_interest ,control_class)
+        X_train, X_test, y_train, y_test = train_test_split(X_combin, y, test_size=0.33, random_state=0)
 
+        if("XGBoost" in options):
+            xgb2 = XGBClassifier(
+                learning_rate =0.2,
+                n_estimators=1000,
+                max_depth=5,
+                min_child_weight=1,
+                gamma=0,
+                subsample=0.8,
+                colsample_bytree=0.8,
+                objective= 'binary:logistic',
+                nthread=4,
+                scale_pos_weight=1,
+                seed=27)
+            cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+            # scores = cross_val_score(xgb2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+            xgb2.fit(X_train, y_train)
+        
+            y_pred_proba = xgb2.predict_proba(X_test)[::,1]
+            fpr, tpr, _ =  metrics.roc_curve(y_test,  y_pred_proba)
+            fig =  graphs.plot_roc(fpr, tpr,height, width, margin)
+            st.text("XGB ROC Curve: ")
+            st.plotly_chart(fig)
+        
+        if("Random Forest" in options):
+            model3 = RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100)
+            # scores = cross_val_score(model3, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+            model3.fit(X_train, y_train)
+            y_pred_proba_rf = model3.predict_proba(X_test)[::,1]
+            fpr_rf, tpr_rf, _ = metrics.roc_curve(y_test,  y_pred_proba_rf)
+            fig_rf =  graphs.plot_roc(fpr_rf, tpr_rf,height, width, margin)
+            st.text("Random Forest ROC Curve: ")
+            st.plotly_chart(fig_rf)
+        
+        if("Support Vector Machine" in options):
+            model2 = SVC(kernel='linear', C=1,probability=True)
+            # scores = cross_val_score(model2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+            model2.fit(X_train, y_train)
+            y_pred_proba_svm = model2.predict_proba(X_test)[::,1]
+            fpr_svm, tpr_svm, _ = metrics.roc_curve(y_test,  y_pred_proba_svm)
+            fig_svm =  graphs.plot_roc(fpr_svm, tpr_svm,height, width, margin)
+            st.text("SVM ROC Curve: ")
+            st.plotly_chart(fig_svm)
+
+        if("Stochastic Gradient Descent Classifier" in options):
+            model2 = SGDClassifier(max_iter=1000, tol=1e-3, loss="log")
+            # scores = cross_val_score(model2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
+            model2.fit(X_train, y_train)           
+            y_pred_proba_sgd = model2.predict_proba(X_test)[::,1]
+            fpr_sgd, tpr_sgd, _ = metrics.roc_curve(y_test,  y_pred_proba_sgd)
+            fig_sgd =  graphs.plot_roc(fpr_sgd, tpr_sgd,height, width, margin)
+            st.text("SGD ROC Curve: ")
+            st.plotly_chart(fig_sgd)
 # -------------------------------------------
 
