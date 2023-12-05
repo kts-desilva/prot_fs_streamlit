@@ -81,7 +81,8 @@ def get_raw_data():
         raw_df = pd.read_csv(uploaded_file)
         #st.write(raw_data)
     else:
-        raw_df = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'zilulu_filtered_data.csv'))
+        #ovarian_clinical_data2 zilulu_filtered_data
+        raw_df = pd.read_csv(os.path.join(os.path.abspath(''), 'data', 'ovarian_clinical_data2.csv'))
     
     return raw_df
 
