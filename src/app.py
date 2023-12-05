@@ -53,6 +53,9 @@ from streamlit_yellowbrick import st_yellowbrick
 from sklearn.feature_selection import SequentialFeatureSelector
 from io import BytesIO
 
+import warnings
+warnings.filterwarnings("ignore")
+
 # %%
 st.set_page_config(
     page_title="Selecting New Unique Protoemic Markers",
@@ -491,11 +494,15 @@ elif condition == 'Feature Selection':
         
         new_df4_sgd = None
         new_df4_xgb = None
+        new_df4_svm = None
 
         if(sfs):    
             st.subheader('Sequential Feature Selector: SGDClassifier')
             if(sfs_proteins == "Overlapping Protein Set from RFE"):
-                new_df3 = X_combin[set.union(*df_list)]
+                if(len(set.union(*df_list))>sfs_num_proteins):
+                    new_df3 = X_combin[set.union(*df_list)]
+                else:
+                    new_df3 = X_combin
             elif sfs_proteins == "Customized list":
                  new_df3 = X_combin[sfs_cust_prot_list] 
             else:
