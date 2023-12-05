@@ -267,6 +267,8 @@ if condition == 'Introduction':
 
 elif condition == 'EDA':
     data = get_raw_data()
+    character_columns = data.select_dtypes(include=['object']).columns
+    class_column = st.sidebar.selectbox('Select the class variable column:', character_columns,index=1)
     with st.container():
         st.header('Descriptive Statistics\n')
         col1, col2 = st.columns([1, 3])
@@ -281,11 +283,11 @@ elif condition == 'EDA':
 
     select_city_eda = st.selectbox(
         'Select the Disease Type',
-        [i for i in data['Sample_Tumor_Normal'].unique()]
+        [i for i in data[class_column].unique()]
     )
     
     ncolms =   list(data.columns.values.tolist())
-    ncolms.remove('Sample_Tumor_Normal')
+    ncolms.remove(class_column)
     ncolms.remove('Patient_ID')
     
     select_protein_eda = st.selectbox(
@@ -297,13 +299,13 @@ elif condition == 'EDA':
         fig = graphs.plot_histogram(data=data, x=select_protein_eda, nbins=50, height=height, width=width, margin=margin)
     else:
         fig = graphs.plot_histogram(
-            data = data.loc[data['Sample_Tumor_Normal'] == select_city_eda], x=select_protein_eda, nbins=50, height=height, width=width, margin=margin)
+            data = data.loc[data[class_column] == select_city_eda], x=select_protein_eda, nbins=50, height=height, width=width, margin=margin)
                       
     st.plotly_chart(fig)
 
     st.subheader('Histogram for Protein')
 
-    fig = graphs.plot_boxplot(data=data, x="Sample_Tumor_Normal", y=select_protein_eda, color="Sample_Tumor_Normal", height=height, width=width, margin=margin)
+    fig = graphs.plot_boxplot(data=data, x=class_column, y=select_protein_eda, color=class_column, height=height, width=width, margin=margin)
 
     st.plotly_chart(fig)
     
