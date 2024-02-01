@@ -397,6 +397,7 @@ elif condition == 'Feature Selection':
             #rf-taking too much time
             if("Random Forest" in rfe_options):
                 st.subheader('Recursive Feature Elimination with Random Forest')
+                new_df = X_combin
                 cv_rf = StratifiedKFold(3)
                 visualizer_rf = RFECV(RandomForestClassifier(max_depth=5, random_state=0,n_estimators=100), cv=cv_rf, scoring='f1_weighted')
                 visualizer_rf.fit(new_df, y)
@@ -418,6 +419,7 @@ elif condition == 'Feature Selection':
             #svm
             if("Support Vector Machine" in rfe_options):
                 st.subheader('Recursive Feature Elimination with Support Vector Machine')
+                new_df = X_combin
                 visualizer = RFECV(SVC(kernel='linear', C=1))
                 visualizer.fit(new_df, y)
                 #visualizer.show()
@@ -436,6 +438,7 @@ elif condition == 'Feature Selection':
     
             #xgb 
             if("XGBoost" in rfe_options):
+                new_df = X_combin
                 xgb1 = XGBClassifier(
                     learning_rate =0.2,
                     n_estimators=1000,
@@ -666,7 +669,7 @@ elif condition == 'Model Prediction':
             st.plotly_chart(fig_svm)
 
         if("Stochastic Gradient Descent Classifier" in options):
-            model2 = SGDClassifier(max_iter=1000, tol=1e-3, loss="log")
+            model2 = SGDClassifier(max_iter=1000, tol=1e-3, loss="log_loss")
             # scores = cross_val_score(model2, X_train, y_train, scoring='roc_auc', cv=cv, n_jobs=-1)
             model2.fit(X_train, y_train)           
             y_pred_proba_sgd = model2.predict_proba(X_test)[::,1]
