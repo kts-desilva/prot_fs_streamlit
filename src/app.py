@@ -503,6 +503,7 @@ elif condition == 'Feature Selection':
             st.subheader('Sequential Feature Selector: SGDClassifier')
             if(sfs_proteins == "Overlapping Protein Set from RFE"):
                 if(len(set().union(*df_list))>sfs_num_proteins):
+                    print(set().union(*df_list))
                     new_df3 = X_combin[list(set().union(list(df_list)))]
                 else:
                     new_df3 = X_combin
