@@ -5,6 +5,7 @@ scikit-learn == 1.1.0
 xgboost
 lightgbm
 plotly
+tensorflow>=2.4.0
 keras
 statsmodels
 matplotlib
