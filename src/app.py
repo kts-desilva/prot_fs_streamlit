@@ -4,12 +4,12 @@ import streamlit as st
 import eda
 import numpy as np
 import os
-import tensorflow as tf
+#import tensorflow as tf
 # os.environ['HDF5_DISABLE_VERSION_CHECK']='2'
 from feature_models import create_model, FeatureCreation
 import pickle
 # from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
-from tensorflow.keras.models import load_model
+#from tensorflow.keras.models import load_model
 import functools
 from sklearn.model_selection import train_test_split
 import graphs
